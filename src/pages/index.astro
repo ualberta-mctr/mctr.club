@@ -10,11 +10,47 @@ import Fluid from '../components/fluid.astro'
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro</title>
+		<style>
+			:root { color-scheme: dark; }
+			body {
+				background: #000;
+				color: #fff;
+				margin: 0;
+				font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+			main {
+				position: relative;
+				z-index: 1;
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			h1 { margin: 0; font-size: clamp(2rem, 6vw, 4rem); }
+		</style>
 	</head>
 	<body>
 		<Fluid />
-		<main style="position:relative; z-index:1;">
+		<!-- Noise overlay sits above the fluid canvas but behind content -->
+		<div class="noise-overlay" aria-hidden="true"></div>
+		<main>
 			<h1>Astro</h1>
 		</main>
 	</body>
 </html>
+
+<style>
+	:global(.noise-overlay) {
+		position: fixed;
+		inset: 0;
+		z-index: 0; /* between canvas (-1) and content (1) */
+		pointer-events: none;
+		background-image: url('/assets/LDR_LLL1_0.png');
+		background-repeat: repeat;
+		background-size: 200px 200px; /* tile size — adjust for stronger/weaker noise */
+		opacity: 0.06; /* subtle noise — adjust as needed */
+		mix-blend-mode: multiply;
+	}
+</style>

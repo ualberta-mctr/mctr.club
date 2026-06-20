@@ -1232,7 +1232,15 @@ function correctDeltaY(delta) {
 }
 
 function generateColor() {
-  let c = HSVtoRGB(Math.random(), 1.0, 1.0);
+  // Generate mostly purple colors with slight variation in hue, saturation, and value
+  let baseHue = 0.75; // purple
+  let hue = baseHue + (Math.random() - 0.5) * 0.1; // +/-0.05 variation
+  if (hue < 0) hue += 1;
+  if (hue > 1) hue -= 1;
+  let saturation = 0.6 + Math.random() * 0.3; // 0.6 - 0.9
+  let value = 0.6 + Math.random() * 0.3; // 0.6 - 0.9
+  let c = HSVtoRGB(hue, saturation, value);
+  // keep final intensity similar to original
   c.r *= 0.15;
   c.g *= 0.15;
   c.b *= 0.15;
