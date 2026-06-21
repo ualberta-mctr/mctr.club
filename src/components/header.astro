@@ -1,19 +1,246 @@
-<div>
-    <span>
-        <img src="" />
-        <h1>mctr.club</h1>
-    </span>
+---
+import { Instagram, Linkedin, Mail, Menu } from 'lucide-astro';
+import Logo from './Logo.astro'; // <-- Update this path to where your Logo component is located
 
-    <span>
-        <a>Events</a>
-        <a>Resources</a>
-        <a>About Us</a>
-        <a>Contact</a>
-    </span>
+const links = [
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+  { href: '/events', label: 'Events' },
+  { href: '/history', label: 'History' },
+  { href: '/resources', label: 'Resources' },
+  { href: '/updates', label: 'Updates'}
+];
 
-    <span>
-        <a>Linkedin</a>
-        <a>Instagram</a>
-        <a>Email</a>
-    </span>
-</div>
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const currentPathname =
+  basePath && Astro.url.pathname.startsWith(basePath)
+    ? Astro.url.pathname.slice(basePath.length) || '/'
+    : Astro.url.pathname;
+const currentPath = currentPathname.replace(/\/$/, '') || '/';
+
+function withBase(href: string) {
+  if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('#')) {
+    return href;
+  }
+
+  if (href === '/') {
+    return `${basePath}/` || '/';
+  }
+
+  return `${basePath}${href.startsWith('/') ? href : `/${href}`}`;
+}
+
+function isActive(href: string) {
+  if (href.startsWith('http')) return false;
+
+  const normalizedHref = href.replace(/\/$/, '') || '/';
+
+  if (normalizedHref === '/') {
+    return currentPath === '/';
+  }
+
+  return currentPath === normalizedHref || currentPath.startsWith(`${normalizedHref}/`);
+}
+---
+
+<header
+  class="blog-top-nav group fixed top-2.5 md:top-[18px] inset-x-0 z-50 grid grid-cols-[auto_minmax(0,1fr)_auto] md:grid-cols-[auto_1fr_auto] gap-2.5 md:gap-6 items-center w-[min(calc(100%-20px),520px)] md:w-[min(calc(100%-32px),900px)] min-h-[54px] md:min-h-[56px] py-2 md:py-2.5 px-3.5 md:pl-[18px] md:pr-3.5 mx-auto border border-[#1c1c27] rounded-lg bg-[#0e0e16]/80 backdrop-blur-xl transition-all duration-200 ease-in-out will-change-transform data-[nav-hidden=true]:opacity-0 data-[nav-hidden=true]:pointer-events-none data-[nav-hidden=true]:-translate-y-[calc(100%+24px)] motion-reduce:transition-none"
+  data-pagefind-ignore
+>
+  <button
+    class="md:hidden inline-grid place-items-center w-9 h-9 p-0 border border-[#1c1c27] rounded-md bg-[#1c1c27] text-gray-100 hover:bg-[#252531] hover:text-violet-500 transition-colors"
+    type="button"
+    aria-label="Open navigation menu"
+    aria-expanded="false"
+    aria-controls="mobile-nav-menu"
+    data-mobile-menu-toggle
+  >
+    <Menu size={18} stroke-width={2} />
+  </button>
+
+  <Logo />
+
+  <nav class="hidden md:flex justify-center gap-1" aria-label="Article navigation">
+    {
+      links.map((link) => (
+        <a
+          class:list={[
+            'relative inline-flex justify-center min-w-[74px] px-3 py-2 rounded-lg text-sm font-bold font-sans transition-colors',
+            isActive(link.href)
+              ? 'bg-[#1c1c27] text-violet-500'
+              : 'text-gray-400 hover:bg-[#1c1c27] hover:text-violet-500',
+          ]}
+          href={withBase(link.href)}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <nav
+    class="absolute top-[calc(100%+8px)] left-0 md:hidden grid min-w-[min(260px,calc(100vw-20px))] gap-1 p-2 border border-[#1c1c27] rounded-lg bg-[#0e0e16] shadow-xl shadow-black/20 opacity-0 pointer-events-none -translate-y-1 transition-all duration-150 group-data-[mobile-menu-open=true]:opacity-100 group-data-[mobile-menu-open=true]:pointer-events-auto group-data-[mobile-menu-open=true]:translate-y-0"
+    id="mobile-nav-menu"
+    aria-label="Mobile navigation"
+    data-mobile-menu
+  >
+    {
+      links.map((link) => (
+        <a
+          class:list={[
+            'flex items-center min-h-[38px] px-2.5 py-2 rounded-md text-[0.92rem] font-bold font-sans transition-colors',
+            isActive(link.href)
+              ? 'bg-[#1c1c27] text-violet-500'
+              : 'text-gray-400 hover:bg-[#1c1c27] hover:text-violet-500',
+          ]}
+          href={withBase(link.href)}
+          data-mobile-menu-link
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="flex gap-1.5 md:gap-2" aria-label="Page actions">
+    <a
+      class="hidden md:inline-grid place-items-center w-9 h-9 md:w-[38px] md:h-[38px] border border-[#1c1c27] rounded-md md:rounded-lg bg-[#1c1c27] text-gray-100 hover:bg-[#252531] hover:text-violet-500 transition-colors"
+      href="https://www.instagram.com/mctr_ualberta/"
+      target="_blank"
+      rel="noreferrer"
+      aria-label="Instagram"
+      title="Instagram"
+    >
+      <Instagram size={17} stroke-width={2} />
+    </a>
+    
+    <a
+      class="hidden md:inline-grid place-items-center w-9 h-9 md:w-[38px] md:h-[38px] border border-[#1c1c27] rounded-md md:rounded-lg bg-[#1c1c27] text-gray-100 hover:bg-[#252531] hover:text-violet-500 transition-colors"
+      href="https://www.linkedin.com/company/mctrclub/"
+      target="_blank"
+      rel="noreferrer"
+      aria-label="LinkedIn"
+      title="LinkedIn"
+    >
+      <Linkedin size={17} stroke-width={2} />
+    </a>
+
+    <a
+      class="hidden md:inline-grid place-items-center w-9 h-9 md:w-[38px] md:h-[38px] border border-[#1c1c27] rounded-md md:rounded-lg bg-[#1c1c27] text-gray-100 hover:bg-[#252531] hover:text-violet-500 transition-colors"
+      href="mailto:mctrclub@ualberta.ca"
+      aria-label="Email"
+      title="Email"
+    >
+      <Mail size={17} stroke-width={2} />
+    </a>
+  </div>
+</header>
+
+<script>
+  const initMobileTopNav = () => {
+    for (const header of document.querySelectorAll<HTMLElement>('.blog-top-nav')) {
+      const toggle = header.querySelector<HTMLButtonElement>('[data-mobile-menu-toggle]');
+      const menu = header.querySelector<HTMLElement>('[data-mobile-menu]');
+
+      if (!header.dataset.scrollHideReady) {
+        header.dataset.scrollHideReady = 'true';
+
+        const topRevealOffset = 24;
+        const hideAfterOffset = 96;
+        const scrollIntentDelta = 8;
+        let lastScrollY = window.scrollY;
+        let scrollFrame = 0;
+
+        const setNavHidden = (hidden: boolean) => {
+          header.dataset.navHidden = hidden ? 'true' : 'false';
+          header.toggleAttribute('inert', hidden);
+          header.toggleAttribute('aria-hidden', hidden);
+        };
+
+        const shouldKeepVisible = () =>
+          window.scrollY <= topRevealOffset ||
+          header.dataset.mobileMenuOpen === 'true' ||
+          header.matches(':focus-within');
+
+        const updateNavVisibility = () => {
+          scrollFrame = 0;
+          const currentScrollY = window.scrollY;
+          const scrollDelta = currentScrollY - lastScrollY;
+
+          if (shouldKeepVisible()) {
+            setNavHidden(false);
+            lastScrollY = currentScrollY;
+            return;
+          }
+
+          if (Math.abs(scrollDelta) < scrollIntentDelta) {
+            return;
+          }
+
+          setNavHidden(scrollDelta > 0 && currentScrollY > hideAfterOffset);
+          lastScrollY = currentScrollY;
+        };
+
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (scrollFrame) {
+              return;
+            }
+
+            scrollFrame = window.requestAnimationFrame(updateNavVisibility);
+          },
+          { passive: true },
+        );
+
+        window.addEventListener('resize', () => {
+          if (window.scrollY <= topRevealOffset) {
+            setNavHidden(false);
+          }
+        });
+
+        setNavHidden(false);
+      }
+
+      if (toggle && menu && !header.dataset.mobileMenuReady) {
+        header.dataset.mobileMenuReady = 'true';
+
+        const setMenuOpen = (open: boolean) => {
+          header.dataset.mobileMenuOpen = open ? 'true' : 'false';
+          toggle.setAttribute('aria-expanded', String(open));
+          toggle.setAttribute(
+            'aria-label',
+            open ? 'Close navigation menu' : 'Open navigation menu',
+          );
+        };
+
+        toggle.addEventListener('click', () => {
+          const nextOpen = header.dataset.mobileMenuOpen !== 'true';
+          setMenuOpen(nextOpen);
+          header.dataset.navHidden = 'false';
+        });
+
+        menu.addEventListener('click', (event) => {
+          if ((event.target as Element).closest?.('[data-mobile-menu-link]')) {
+            setMenuOpen(false);
+          }
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!header.contains(event.target as Node)) {
+            setMenuOpen(false);
+          }
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            setMenuOpen(false);
+          }
+        });
+      }
+    }
+  };
+
+  initMobileTopNav();
+  document.addEventListener('astro:page-load', initMobileTopNav);
+</script>

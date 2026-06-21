@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Fluid from "../components/Fluid.astro";
 import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro"
 
 interface Props {
     title: string;
@@ -59,7 +60,7 @@ const { title, description = "Home of UAlberta Mechatronics" } = Astro.props;
             aria-hidden="true"
         >
         </div>
-
+        <Header />
         <main
             id="main"
             class="relative z-10 min-h-screen flex items-center justify-center"
