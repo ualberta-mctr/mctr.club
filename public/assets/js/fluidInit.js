@@ -25,6 +25,9 @@ SOFTWARE.
 'use strict';
 
 let canvas = document.getElementsByClassName('fluid-canvas')[0];
+
+let lastMobileWidth = 0;
+
 resizeCanvas();
 
 let config = {
@@ -106,9 +109,13 @@ function getWebGLContext(canvas) {
   let halfFloat;
   let supportLinearFiltering;
   if (isWebGL2) {
-    gl.getExtension('EXT_color_buffer_float');
-    supportLinearFiltering = gl.getExtension('OES_texture_float_linear');
-  } else {
+gl.getExtension('EXT_color_buffer_float');
+    
+    gl.getExtension('EXT_color_buffer_half_float');
+    
+    let extFloatLinear = gl.getExtension('OES_texture_float_linear');
+    let extHalfFloatLinear = gl.getExtension('OES_texture_half_float_linear');
+    supportLinearFiltering = extFloatLinear || extHalfFloatLinear;  } else {
     halfFloat = gl.getExtension('OES_texture_half_float');
     supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear');
   }
@@ -526,6 +533,17 @@ function initBloomFramebuffers() {
   let rgba = ext.formatRGBA;
   let filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
 
+  if (bloom) {
+      gl.deleteTexture(bloom.texture);
+      gl.deleteFramebuffer(bloom.fbo);
+  }
+  bloomFramebuffers.forEach(fbo => {
+      gl.deleteTexture(fbo.texture);
+      gl.deleteFramebuffer(fbo.fbo);
+  });
+
+  bloomFramebuffers.length = 0;
+
   bloom = createFBO(
     res.width,
     res.height,
@@ -535,7 +553,6 @@ function initBloomFramebuffers() {
     filtering
   );
 
-  bloomFramebuffers.length = 0;
   for (let i = 0; i < config.BLOOM_ITERATIONS; i++) {
     let width = res.width >> (i + 1);
     let height = res.height >> (i + 1);
@@ -562,6 +579,15 @@ function initSunraysFramebuffers() {
   let texType = ext.halfFloatTexType;
   let r = ext.formatR;
   let filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
+
+  if (sunrays) {
+      gl.deleteTexture(sunrays.texture);
+      gl.deleteFramebuffer(sunrays.fbo);
+  }
+  if (sunraysTemp) {
+      gl.deleteTexture(sunraysTemp.texture);
+      gl.deleteFramebuffer(sunraysTemp.fbo);
+  }
 
   sunrays = createFBO(
     res.width,
@@ -655,6 +681,10 @@ function resizeFBO(target, w, h, internalFormat, format, type, param) {
   copyProgram.bind();
   gl.uniform1i(copyProgram.uniforms.uTexture, target.attach(0));
   blit(newFBO.fbo);
+  
+  if (target.texture) gl.deleteTexture(target.texture);
+  if (target.fbo) gl.deleteFramebuffer(target.fbo);
+  
   return newFBO;
 }
 
@@ -767,6 +797,19 @@ function calcDeltaTime() {
 function resizeCanvas() {
   let width = scaleByPixelRatio(canvas.clientWidth);
   let height = scaleByPixelRatio(canvas.clientHeight);
+  
+  if (width === 0 || height === 0) return false;
+
+  if (isMobile()) {
+    if (width !== lastMobileWidth) {
+      lastMobileWidth = width;
+      canvas.width = width;
+      canvas.height = height;
+      return true;
+    }
+    return false;
+  }
+
   if (canvas.width != width || canvas.height != height) {
     canvas.width = width;
     canvas.height = height;
@@ -1143,30 +1186,26 @@ window.addEventListener('mousemove', function (e) {
 });
 
 window.addEventListener('touchstart', function (e) {
-  // e.preventDefault();
   let touches = e.targetTouches;
+  let rect = canvas.getBoundingClientRect();
   while (touches.length >= pointers.length) {
     pointers.push(new pointerPrototype());
   }
   for (let i = 0; i < touches.length; i++) {
-    let posX = scaleByPixelRatio(touches[i].clientX);
-    let posY = scaleByPixelRatio(touches[i].clientY);
+    let posX = scaleByPixelRatio(touches[i].clientX - rect.left);
+    let posY = scaleByPixelRatio(touches[i].clientY - rect.top);
     updatePointerDownData(pointers[i + 1], touches[i].identifier, posX, posY);
   }
 });
 
-window.addEventListener(
-  'touchmove',
-  function (e) {
-    // e.preventDefault();
+window.addEventListener('touchmove', function (e) {
     let touches = e.targetTouches;
+    let rect = canvas.getBoundingClientRect();
     for (let i = 0; i < touches.length; i++) {
       let pointer = pointers[i + 1];
-      if (!pointer.down) {
-        continue;
-      }
-      let posX = scaleByPixelRatio(touches[i].clientX);
-      let posY = scaleByPixelRatio(touches[i].clientY);
+      if (!pointer.down) continue;
+      let posX = scaleByPixelRatio(touches[i].clientX - rect.left);
+      let posY = scaleByPixelRatio(touches[i].clientY - rect.top);
       updatePointerMoveData(pointer, posX, posY);
     }
   },
@@ -1192,8 +1231,8 @@ function updatePointerDownData(pointer, id, posX, posY) {
   pointer.id = id;
   pointer.down = true;
   pointer.moved = false;
-  pointer.texcoordX = posX / (canvas.width / 2);
-  pointer.texcoordY = 1 - posY / (canvas.height / 2);
+  pointer.texcoordX = posX / (canvas.width);
+  pointer.texcoordY = 1 - posY / (canvas.height);
   pointer.prevTexcoordX = pointer.texcoordX;
   pointer.prevTexcoordY = pointer.texcoordY;
   pointer.deltaX = 0;
