@@ -1,7 +1,7 @@
 ---
 title: 'Vega 2.0: edge caching is GA'
 description: 'After six months in beta and 41 billion requests served, edge caching is generally available on every Vega plan. What shipped, what changed since the beta, and how to turn it on.'
-pubDate: 2026-06-02
+publishDate: 2026-06-02
 author: 'Priya Raghavan'
 authorRole: 'Co-founder & CTO'
 tags: ['launch', 'edge caching']

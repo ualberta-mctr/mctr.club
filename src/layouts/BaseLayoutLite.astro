@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import BaseHead from "../components/BaseHead.astro";
+import SkipLink from "../components/SkipLink.astro";
 
 interface Props {
     title: string;
@@ -12,11 +13,12 @@ interface Props {
 const { title, description = "Home of UAlberta Mechatronics" } = Astro.props;
 ---
 
-<html lang="en" class="dark font-serif bg-black text-neutral-400" >
+<html lang="en" class="dark font-serif bg-black text-neutral-400">
     <BaseHead title={title} description={description} />
-    <body class="bg-black text-white">
+    <body>
+        <SkipLink />
         <Header />
-        <main id="main">
+        <main class="min-h-screen pt-23.5 min-[830px]:pt-28">
             <slot />
         </main>
         <Footer />

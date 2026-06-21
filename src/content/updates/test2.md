@@ -1,7 +1,7 @@
 ---
 title: 'Tracing distributed requests without the grief'
 description: 'Most tracing rollouts die in the collector config. Vega traces every request end-to-end by default — no agents, no sampling YAML, no separate backend to keep alive at 2am.'
-pubDate: 2026-04-22
+publishDate: 2026-04-22
 author: 'Tomás Rivera'
 authorRole: 'Product Engineer'
 tags: ['observability', 'engineering']

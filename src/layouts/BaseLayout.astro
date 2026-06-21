@@ -4,6 +4,7 @@ import Fluid from "../components/Fluid.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import BaseHead from "../components/BaseHead.astro";
+import SkipLink from "../components/SkipLink.astro";
 
 interface Props {
     title: string;
@@ -16,13 +17,7 @@ const { title, description = "Home of UAlberta Mechatronics" } = Astro.props;
 <html lang="en" class="dark font-serif bg-black text-neutral-400" >
     <BaseHead title={title} description={description} />
     <body>
-        <a
-            href="#main"
-            class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-60 focus:rounded-md focus:bg-panel focus:px-3 focus:py-2 focus:text-sm"
-        >
-            Skip to content
-        </a>
-
+        <SkipLink />
         <div class="fixed inset-0 z-[-1]">
             <Fluid />
         </div>
@@ -36,7 +31,7 @@ const { title, description = "Home of UAlberta Mechatronics" } = Astro.props;
         <Header />
         <main
             id="main"
-            class="relative z-10 min-h-screen flex items-center justify-center"
+            class="min-h-screen pt-23.5 min-[830px]:pt-28"
         >
             <slot />
         </main>

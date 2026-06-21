@@ -1,7 +1,7 @@
 ---
 title: 'Why we built our own deploy pipeline'
 description: 'Conventional CI treats a deploy as an event. Ours had to be a keystroke. The reasoning behind the 1.2-second build, the tradeoffs we accepted, and what we would do differently.'
-pubDate: 2026-03-19
+publishDate: 2026-03-19
 author: 'Sam Okafor'
 authorRole: 'Platform Engineer'
 tags: ['engineering', 'culture']

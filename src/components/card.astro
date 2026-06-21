@@ -10,7 +10,7 @@ const { class: className } = Astro.props;
 <div
   class:list={[
     // Base layout and padding
-    "relative container p-6 sm:p-8",
+    "relative p-6 sm:p-8",
     
     // Rounded edges
     "rounded-2xl",
@@ -21,6 +21,8 @@ const { class: className } = Astro.props;
     // Glowing border effect (subtle white border with an outer shadow glow)
     "border border-white/10",
     "shadow-[0_0_20px_rgba(255,255,255,0.03)]",
+
+    "h-full", "w-full",
     
     // Custom classes passed via props
     className,

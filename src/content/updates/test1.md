@@ -1,7 +1,7 @@
 ---
 title: 'How we cut p99 latency to 42ms with edge caching'
 description: 'A deep-dive into the cache layer behind Vega 2.0: stale-while-revalidate at all 24 regions, single-flight revalidation, and the tag-based invalidation model that made it safe to turn on.'
-pubDate: 2026-05-14
+publishDate: 2026-05-14
 author: 'Mara Chen'
 authorRole: 'Infrastructure Engineer'
 tags: ['engineering', 'performance']
