@@ -1,0 +1,71 @@
+---
+import "../styles/global.css";
+import Fluid from "../components/Fluid.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+    title: string;
+    description?: string;
+}
+
+const { title, description = "Home of UAlberta Mechatronics" } = Astro.props;
+---
+
+<html lang="en" class="dark font-serif bg-black text-neutral-400" >
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+    </head>
+    <body>
+        <a
+            href="#main"
+            class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-60 focus:rounded-md focus:bg-panel focus:px-3 focus:py-2 focus:text-sm"
+        >
+            Skip to content
+        </a>
+
+        <div class="fixed inset-0 z-[-1]">
+            <Fluid />
+        </div>
+
+        <div
+            class="fixed inset-0 z-0 pointer-events-none bg-repeat mix-blend-multiply"
+            style="background-image: url('/assets/LDR_LLL1_0.png'); background-size:200px 200px; opacity:0.06;"
+            aria-hidden="true"
+        >
+        </div>
+
+        <main
+            id="main"
+            class="relative z-10 min-h-screen flex items-center justify-center"
+        >
+            <slot />
+        </main>
+        <Footer />
+    </body>
+</html>

@@ -1,34 +1,10 @@
 ---
-import '../styles/global.css'
-import Fluid from '../components/fluid.astro'
-import Card from '../components/card.astro'
+import BaseLayout from "../layouts/BaseLayout.astro"
+import Card from "../components/Card.astro"
 ---
 
-<html lang="en" class="dark">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body class="bg-black text-white">
-		<div class="fixed inset-0 z-[-1]">
-			<Fluid />
-		</div>
-
-		<div
-			class="fixed inset-0 z-0 pointer-events-none bg-repeat mix-blend-multiply"
-			style="background-image: url('/assets/LDR_LLL1_0.png'); background-size:200px 200px; opacity:0.06;"
-			aria-hidden="true"
-		></div>
-
-		<main class="relative z-10 min-h-screen flex items-center justify-center">
-			<h1 class="m-0 text-center text-4xl sm:text-6xl block">Astro</h1>
-			<div class="hero size-1.0 block">
-				<Card><p>This is some text about mechatronics</p></Card>
-			</div>
-		</main>
-	</body>
-</html>
+<BaseLayout title="Mechatronics Club">
+            <div class="hero size-1.0 block font-sans">
+                <Card><p>This is some text about mechatronics</p></Card>
+            </div>
+</BaseLayout>
