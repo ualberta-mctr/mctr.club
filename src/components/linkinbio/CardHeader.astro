@@ -1,7 +1,6 @@
 ---
 const { name, bio, avatar, align, deco } = Astro.props;
 
-// Standard root-relative paths point directly to your `public` directory
 const avatarPath = avatar ? `${avatar}` : '/favicon.svg';
 const fallbackPath = '/favicon.svg';
 

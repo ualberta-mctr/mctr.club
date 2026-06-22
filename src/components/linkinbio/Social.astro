@@ -10,7 +10,7 @@ import {
   Gitlab,
   Dribbble,
   Mail,
-  QrCode, // 1. Added QrCode icon
+  QrCode,
   Link as LinkIcon
 } from 'lucide-astro';
 
@@ -30,7 +30,7 @@ const socialIcons: Record<string, any> = {
   gitlab: Gitlab,
   dribbble: Dribbble,
   email: Mail,
-  qrcode: QrCode, // 2. Map 'qrcode' to the imported icon
+  qrcode: QrCode,
 };
 
 let listClasses = 'flex items-center flex-wrap gap-2 text-base';
@@ -46,7 +46,6 @@ if (align === 'center') {
       const key = platform.toLowerCase();
       const IconComponent = socialIcons[key] || LinkIcon;
 
-      // 3. Special handling for the QR Code button
       if (key === 'qrcode') {
         return (
           <li>
@@ -62,7 +61,6 @@ if (align === 'center') {
         )
       }
 
-      // Default handling for normal social links
       return (
         <li>
           <a
@@ -81,13 +79,11 @@ if (align === 'center') {
 )}
 
 <script>
-  // 4. Client-side script to handle the copy action
   const qrButtons = document.querySelectorAll('.qr-copy-btn');
 
   qrButtons.forEach(button => {
     button.addEventListener('click', async (e) => {
       const btn = e.currentTarget as HTMLButtonElement;
-      // Pull the URL from the data attribute (defaults to /qr-code.png)
       const qrUrl = btn.dataset.qrUrl || '/qr-code.png';
 
       try {
@@ -100,7 +96,6 @@ if (align === 'center') {
           })
         ]);
 
-        // Visual feedback: briefly turn the icon green
         btn.classList.add('!text-green-500');
         setTimeout(() => {
           btn.classList.remove('!text-green-500');

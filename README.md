@@ -1,31 +1,41 @@
-# Astro Starter Kit: Minimal
+# mctr.site
 
-```sh
-npm create astro@latest -- --template minimal
-```
+## Project Structure
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+Notable files and locations in the project
 
 ```text
-/
 ├── public/
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/
+│   ├── content/
+│   ├── data/
+│   ├── layouts/
+│   ├── pages/
+│   ├── styles/
+│   └── utils/
+├── settings.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Folders
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+* **`public/`**
+Contains static assets that do not need to be processed by Astro’s build system 
+* **`components/`**: Reusable Astro UI elements
+* **`content/`**: Reserved for Astro’s **Content Collections**. This folder contains the `.md` files for the updates on the website
+* **`data/`** & `utils/`: Miscellaneous functions
+* **`layouts/`**: Reusable Astro Layouts
+* **`pages/`**: This folder contains all the pages on the website, URLs are built from file-based routing
+* **`styles/`**: Contains `global.css` with a TailwindCSS import and variables used throughout the project
 
-Any static assets, like images, can be placed in the `public/` directory.
 
-## 🧞 Commands
+### Notable Configuration Files
+
+* **`settings.json`**
+This configuration file is used to edit the links available at `mctr.club/links`
+
+
+## Commands
 
 All commands are run from the root of the project, from a terminal:
 
@@ -38,6 +48,15 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## Tech Stack
+* **[Astro](https://astro.build/)** – A modern web framework optimized for speed. It utilizes an "island architecture" to deliver ultra-fast performance by shipping zero client-side JavaScript by default.
+* **[Tailwind CSS](https://tailwindcss.com/)** – A utility-first CSS framework that enables rapid UI development and responsive design directly within your HTML and Astro components.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## Credits
+This website was built using code from the following projects
+- https://github.com/PavelDoGreat/WebGL-Fluid-Simulation 
+- https://github.com/AnjayGoel/astro-sienna
+- https://github.com/jomorespi/manduca
+- https://github.com/dodolalorc/astro-navfolio
+- https://github.com/cbetz/pulsar-lite

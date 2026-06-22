@@ -6,20 +6,11 @@ import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 
 interface Props {
-	meta: {
-		title: string;
-		description?: string;
-		articleDate?: string;
-		ogImage?: string;
-	};
+	title: string;
+	description?: string;
 }
 
-const {
-	meta: { 
-		description = "Home of UAlberta Mechatronics", 
-		title 
-	},
-} = Astro.props;
+const { title, description = "Home of UAlberta Mechatronics" } = Astro.props;
 ---
 
 <html lang="en" class="dark font-serif bg-black text-neutral-400 scroll-smooth">
@@ -29,7 +20,7 @@ const {
 	<body>
 		<SkipLink />
 		<Header />
-        <main id="main" class="min-h-screen pt-23.5 min-[830px]:pt-28 max-w-[760px] mx-auto px-6 lg:px-0">
+        <main id="main" class="min-h-screen pt-23.5 min-[830px]:pt-28 max-w-[800px] mx-auto px-6 lg:px-0">
 			<slot />
 		</main>
 		<Footer />
