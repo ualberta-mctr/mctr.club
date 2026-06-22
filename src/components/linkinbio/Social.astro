@@ -1,0 +1,115 @@
+---
+import {
+  Twitter,
+  Linkedin,
+  Instagram,
+  Facebook,
+  Youtube,
+  Twitch,
+  Github,
+  Gitlab,
+  Dribbble,
+  Mail,
+  QrCode, // 1. Added QrCode icon
+  Link as LinkIcon
+} from 'lucide-astro';
+
+const { social, align } = Astro.props;
+
+const activeSocial = Object.entries(social).filter(([_, url]) => url && url !== '');
+
+const socialIcons: Record<string, any> = {
+  twitter: Twitter,
+  x: Twitter, 
+  linkedin: Linkedin,
+  instagram: Instagram,
+  facebook: Facebook,
+  youtube: Youtube,
+  twitch: Twitch,
+  github: Github,
+  gitlab: Gitlab,
+  dribbble: Dribbble,
+  email: Mail,
+  qrcode: QrCode, // 2. Map 'qrcode' to the imported icon
+};
+
+let listClasses = 'flex items-center flex-wrap gap-2 text-base';
+
+if (align === 'center') {
+  listClasses = listClasses + ' justify-center';
+}
+---
+
+{activeSocial.length > 0 && (
+  <ul class={listClasses}>
+    {activeSocial.map(([platform, url]) => {
+      const key = platform.toLowerCase();
+      const IconComponent = socialIcons[key] || LinkIcon;
+
+      // 3. Special handling for the QR Code button
+      if (key === 'qrcode') {
+        return (
+          <li>
+            <button
+              class="qr-copy-btn inline-grid place-items-center w-9 h-9 border border-[#1c1c27] rounded-md bg-[#1c1c27] text-gray-100 hover:bg-[#252531] hover:text-violet-500 transition-colors"
+              aria-label="Copy QR Code"
+              title="Copy QR Code to clipboard"
+              data-qr-url={typeof url === 'string' && url.endsWith('.png') ? url : '/qr-code.png'}
+            >
+              <IconComponent class="w-[18px] h-[18px] pointer-events-none" stroke-width={2} />
+            </button>
+          </li>
+        )
+      }
+
+      // Default handling for normal social links
+      return (
+        <li>
+          <a
+            class="inline-grid place-items-center w-9 h-9 border border-[#1c1c27] rounded-md bg-[#1c1c27] text-gray-100 hover:bg-[#252531] hover:text-violet-500 transition-colors"
+            href={url as string}
+            aria-label={platform}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <IconComponent class="w-[18px] h-[18px]" stroke-width={2} />
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+)}
+
+<script>
+  // 4. Client-side script to handle the copy action
+  const qrButtons = document.querySelectorAll('.qr-copy-btn');
+
+  qrButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+      const btn = e.currentTarget as HTMLButtonElement;
+      // Pull the URL from the data attribute (defaults to /qr-code.png)
+      const qrUrl = btn.dataset.qrUrl || '/qr-code.png';
+
+      try {
+        const response = await fetch(qrUrl);
+        const blob = await response.blob();
+
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            [blob.type]: blob
+          })
+        ]);
+
+        // Visual feedback: briefly turn the icon green
+        btn.classList.add('!text-green-500');
+        setTimeout(() => {
+          btn.classList.remove('!text-green-500');
+        }, 2000);
+
+      } catch (err) {
+        console.error('Failed to copy QR code: ', err);
+        alert('Could not copy the QR code. Your browser might not support this feature.');
+      }
+    });
+  });
+</script>

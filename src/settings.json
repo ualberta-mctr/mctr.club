@@ -1,0 +1,61 @@
+{
+  "Style": {
+    "Align": "center",
+    "Decoration": "all"
+  },
+  "Content" : {
+    "Language": "en"
+  },
+  "Header": {
+    "Name": "Mechatronics Club",
+    "Bio": "Home for mechatronics students",
+    "Avatar": "favicon.svg"
+  },
+  "Links": {
+    "Website": "/"
+  },
+  "Social": {
+    "Linkedin": "https://www.linkedin.com/company/mctrclub/",
+    "Mastodon": "",
+    "Bluesky": "",
+    "Threads": "",
+    "Twitter": "",
+    "Instagram": "https://www.instagram.com/mctr_ualberta/",
+    "Pinterest": "",
+    "Snapchat": "",
+    "Facebook": "",
+    "Vimeo": "",
+    "YouTube": "",
+    "TikTok": "",
+    "Twitch": "",
+    "Bandcamp": "",
+    "SoundCloud": "",
+    "Tidal": "",
+    "Spotify": "",
+    "GitHub": "",
+    "GitLab": "",
+    "Codeberg": "",
+    "StackOverflow": "",
+    "Discord": "",
+    "Behance": "",
+    "Dribbble": "",
+    "Reddit": "",
+    "Quora": "",
+    "Substack": "",
+    "Medium": "",
+    "WordPress": "",
+    "WhatsApp": "",
+    "Telegram": "",
+    "Strava": "", 
+    "Email": "mailto:mctrclub@ualberta.ca",
+    "qrcode": "true"
+  },
+  "Footer": {
+    "Text": "",
+    "Menu": {
+      "Updates": "updates",
+      "Resources": "resources",
+      "About Us": "about"
+    }
+  }
+}

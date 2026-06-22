@@ -1,0 +1,21 @@
+---
+const { links } = Astro.props;
+
+const activeLinks = Object.entries(links).filter(([_, url]) => url && url !== '');
+---
+{activeLinks.length > 0 && (
+  <ul class="grid gap-2.5 mb-6">
+    {activeLinks.map(([title, url]) => (
+      <li>
+        <a 
+          href={url as string} 
+          class="flex items-center justify-center p-3.5 border border-[#1c1c27] rounded-lg bg-[#1c1c27] text-gray-100 hover:bg-[#252531] hover:text-violet-500 transition-colors duration-200 font-bold text-sm" 
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          {title}
+        </a>
+      </li>
+    ))}
+  </ul>
+)}

@@ -1,0 +1,25 @@
+---
+const { links, align } = Astro.props;
+
+const activeLinks = Object.entries(links).filter(([_, url]) => url && url !== '');
+let listClasses = 'mt-2 flex flex-wrap gap-3';
+
+if( align === 'center' ) {
+  listClasses = listClasses + ' justify-center';
+}
+---
+
+{activeLinks.length > 0 && (
+  <ul class={listClasses}>
+    {activeLinks.map(([title, url]) => (
+      <li>
+        <a 
+          href={url as string} 
+          class="text-gray-400 hover:text-violet-500 focus:text-violet-500 transition-colors duration-200 font-medium"
+        >
+          {title}
+        </a>
+      </li>
+    ))}
+  </ul>
+)}

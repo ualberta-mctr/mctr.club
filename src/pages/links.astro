@@ -1,0 +1,34 @@
+---
+import CardHeader from '../components/linkinbio/CardHeader.astro';
+import Linker from '../components/linkinbio/Linker.astro';
+import Social from '../components/linkinbio/Social.astro';
+import BaseLayout from '../layouts/linkinbio/BaseLayout.astro';
+import Footer from '../components/linkinbio/Footer.astro';
+import settingsData from '../settings.json';
+
+const settings = settingsData; 
+const deco = settings.Style.Decoration;
+const align = settings.Style.Align;
+const alignClass = align === 'center' ? 'text-center' : 'text-left';
+
+// FIX: Replaced w-96 max-w-full with w-full max-w-sm so it shrinks beautifully on mobile
+const containerClass = `card mx-auto p-6 sm:p-8 w-full max-w-sm rounded-3xl bg-[#0e0e16]/80 backdrop-blur-xl border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.03)] ${alignClass}`;
+
+let lineClasses = 'w-12 h-0.5 rounded-full bg-accent mb-6 mt-6';
+
+if(align === 'center') {
+  lineClasses = lineClasses + ' mx-auto';
+}
+---
+
+<BaseLayout settings={settings}>
+    <div class={containerClass}>
+        <CardHeader name={settings.Header.Name} bio={settings.Header.Bio} avatar={settings.Header.Avatar} align={align} deco={settings.Style.Decoration} />
+        <main>
+            <Linker links={settings.Links} />
+            <Social social={settings.Social} align={align} />
+            { (deco === 'all' || deco === 'lines') && <div aria-hidden="true" class={lineClasses}></div> }
+        </main>
+        <Footer txt={settings.Footer.Text} links={settings.Footer.Menu} align={ align } class="mt-6" />
+    </div>
+</BaseLayout>

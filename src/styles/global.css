@@ -14,5 +14,65 @@
     --color-fg-2: #a0a0b4;
     --color-fg-3: #82829a;
 
-    --color-bg: #1c1f2e;
+    --color-bg: #000;
+
+    --color-body: var(--color-gray-200);
+    --color-muted: var(--color-gray-400);
+    --color-accent: var(--color-violet-500);
+}
+
+@layer base {
+    * {
+        @apply underline-offset-4;
+    }
+
+    .page-content :where(h1, h2, h3, h4, h5, h6, p, ol, ul, dl, dd, blockquote) {
+        @apply mb-4 leading-[1.6];
+    }
+
+    .page-content :where(h1, h2, h3, h4, h5, h6) {
+        @apply font-semibold;
+    }
+
+    .page-content h1 {
+        @apply text-2xl;
+    }
+
+    .page-content h2 {
+        @apply text-xl;
+    }
+
+    .page-content h3 {
+        @apply text-lg;
+    }
+
+    .page-content h5 {
+        @apply text-sm;
+    }
+
+    /* Updated border to match your new styling */
+    .page-content hr {
+        @apply my-8 border-white/10;
+    }
+
+    .page-content :where(ul, ol) {
+        @apply pl-4;
+    }
+
+    .page-content :where(ul, ol) li {
+        @apply mt-4;
+    }
+
+    .page-content ul {
+        @apply list-disc;
+    }
+
+    .page-content ol {
+        @apply list-decimal;
+    }
+
+    /* Links now hover with your violet accent color */
+    .page-content a {
+        @apply text-muted underline hover:text-accent focus-visible:text-accent;
+    }
 }

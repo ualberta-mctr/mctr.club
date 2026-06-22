@@ -1,0 +1,40 @@
+---
+const { name, bio, avatar, align, deco } = Astro.props;
+
+// Standard root-relative paths point directly to your `public` directory
+const avatarPath = avatar ? `${avatar}` : '/favicon.svg';
+const fallbackPath = '/favicon.svg';
+
+let imgClasses = 'rounded-full min-w-18 w-18 h-18 relative';
+let headerClasses = 'mb-7 flex gap-4';
+let lineClasses = 'w-12 h-0.5 rounded-full bg-violet-500 my-2';
+
+if(align === 'center') {
+  headerClasses = headerClasses + ' flex-col-reverse items-center';
+  lineClasses = lineClasses + ' mx-auto';
+} else {
+  headerClasses = headerClasses + ' flex-row-reverse';
+}
+---
+
+<header class={headerClasses}>
+  <div class="grow">
+    <h1 class="font-bold text-gray-100 text-lg">{ name }</h1>
+    { (deco === 'all' || deco === 'lines') && 
+      <div aria-hidden="true" class={lineClasses}></div> 
+    }
+    {bio && <p class="mt-0.5 text-gray-400">{bio}</p>}
+  </div>
+  <div class={imgClasses}>
+    <img
+      src={avatarPath}
+      class="rounded-full"
+      alt={name || "Avatar"}
+      width="72"
+      height="72"
+      loading="eager"
+      fetchpriority="high"
+      onerror={`this.onerror=null; this.src='${fallbackPath}'`}
+    />
+  </div>
+</header>
