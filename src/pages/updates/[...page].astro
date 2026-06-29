@@ -42,7 +42,7 @@ const paginationProps = {
 const totalCount = page.total;
 ---
 
-<PageLayout meta={meta}>
+<PageLayout description={meta.description} title={meta.title}>
 	<section class="writing" aria-labelledby="writing-label">
 		<div class="section-label" id="writing-label">Updates · {totalCount} posts</div>
 		<div class="timeline">

@@ -1,0 +1,59 @@
+---
+import MemberCard from './MemberCard.astro';
+
+interface Member {
+  name: string;
+  role: string;
+  image?: string; 
+  about?: string;
+}
+
+interface Props {
+  title?: string;
+  enableModal?: boolean;
+  members: Member[];
+}
+
+const { title, enableModal = false, members } = Astro.props;
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/*.{jpeg,jpg,png,gif,webp}');
+---
+
+<div class="w-full mb-20 last:mb-0">
+  
+  {title && (
+    <div class="flex items-center justify-center gap-4 mb-12 w-full max-w-5xl mx-auto px-4">
+      <div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+      <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-violet-400 whitespace-nowrap font-sans">
+        {title}
+      </h2>
+      <div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+    </div>
+  )}
+
+  <div class="flex flex-wrap justify-center gap-6 xl:gap-8 max-w-[1550px] mx-auto w-full px-4 sm:px-6">
+    {members.map(async (member) => {
+      let imageAsset = null;
+      
+      if (member.image) {
+        const imagePath = `/src/assets/${member.image}`;
+        if (images[imagePath]) {
+          imageAsset = (await images[imagePath]()).default;
+        } else {
+          console.warn(`[TeamGrid] Missing image asset: ${imagePath}`);
+        }
+      }
+      
+      return (
+        <MemberCard 
+          name={member.name} 
+          role={member.role} 
+          image={imageAsset}
+          about={member.about}
+          enableModal={enableModal}
+        />
+      );
+    })}
+  </div>
+  
+</div>

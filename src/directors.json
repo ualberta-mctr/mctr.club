@@ -1,0 +1,12 @@
+{
+  "title": "Directors",
+  "enableModal": false,
+  "members": [
+    {
+      "name": "Gabriel Baltazart",
+      "role": "Technical Development",
+      "image": "gabrielBaltazart.jpg",
+      "about": ""
+    }
+  ]
+}

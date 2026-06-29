@@ -1,0 +1,54 @@
+{
+  "title": "Vice Presidents",
+  "enableModal": false,
+  "members": [
+    {
+      "name": "Saree Zaitoun",
+      "role": "VP Finance",
+      "image": "sareeZaitoun.jpg",
+      "about": ""
+    },
+    {
+      "name": "Ari Ingolfsson",
+      "role": "Co-VP Academic",
+      "image": "ariIngolfsson.jpg",
+      "about": ""
+    },
+    {
+      "name": "Peter Rojkovski",
+      "role": "Co-VP Academic",
+      "image": "peterRojkovski.jpg",
+      "about": ""
+    },
+    {
+      "name": "Naya Veljkovic-Nychka",
+      "role": "Co-VP Student Life",
+      "image": "nayaVeljkovic-Nychka.jpg",
+      "about": ""
+    },
+    {
+      "name": "Abby Berghuys",
+      "role": "Co-VP Student Life",
+      "image": "abbyBerghuys.jpg",
+      "about": ""
+    },
+    {
+      "name": "Noah McKay",
+      "role": "VP Internal",
+      "image": "noahMcKay.jpg",
+      "about": ""
+    },
+    {
+      "name": "Keiron Street",
+      "role": "VP External",
+      "image": "keironStreet.jpg",
+      "about": ""
+    },
+    {
+      "name": "Bayan Shayeb",
+      "role": "VP Communications",
+      "image": "bayanShayeb.jpg",
+      "about": ""
+    }
+  ]
+}

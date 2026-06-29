@@ -1,0 +1,113 @@
+---
+import { Image } from 'astro:assets';
+import { User } from 'lucide-astro'; 
+
+interface Props {
+  name: string;
+  role: string;
+  image?: ImageMetadata | null; 
+  about?: string;
+  enableModal: boolean;
+}
+
+const { name, role, image, about, enableModal } = Astro.props;
+---
+
+<div 
+  class={`member-card group relative p-1.5 pb-4 w-full sm:w-[340px] rounded-2xl bg-[#0e0e16]/80 backdrop-blur-xl border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.03)] transition-all duration-300 flex flex-col ${enableModal ? 'cursor-pointer hover:border-violet-500/40 hover:shadow-[0_0_30px_rgba(139,92,246,0.1)]' : ''}`}
+  data-enable-modal={enableModal ? "true" : "false"}
+>
+  
+  <div class="relative w-full aspect-[3/4] shrink-0 overflow-hidden rounded-xl border border-white/5 bg-neutral-900 flex items-center justify-center">
+    {image ? (
+      <Image 
+        src={image} alt={name} width={340} height={453} format="webp"
+        class="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+      />
+    ) : (
+      <User class="w-24 h-24 text-neutral-800 transition-transform duration-500 group-hover:scale-110 group-hover:text-violet-500/30" strokeWidth={1.5} />
+    )}
+  </div>
+
+  <div class="flex flex-col justify-center items-center text-center pt-3 px-2 grow">
+    <h3 class="text-base sm:text-lg font-bold text-white tracking-wide font-serif transition-colors group-hover:text-violet-200 leading-tight">
+      {name}
+    </h3>
+    <p class="mt-1.5 text-[11px] font-bold text-violet-400 tracking-widest uppercase font-sans leading-none">
+      {role}
+    </p>
+  </div>
+
+  {enableModal && (
+    <dialog class="member-dialog m-auto w-[calc(100%-2rem)] max-w-3xl bg-transparent p-0 border-0 outline-none backdrop:bg-black/80 backdrop:backdrop-blur-md closed">
+      
+      <div class="relative bg-[#0e0e16] border border-white/10 rounded-2xl p-6 shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col md:flex-row gap-6 md:gap-8 text-left overflow-hidden">
+        
+        <button class="close-button absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full bg-black/60 border border-white/20 text-white hover:bg-black/80 hover:scale-110 text-xl font-sans transition-all z-20 backdrop-blur-md pb-1 shadow-lg">&times;</button>
+        
+        <div class="relative w-full md:w-[280px] shrink-0 aspect-[3/4] overflow-hidden rounded-xl border border-white/5 bg-neutral-900 mx-auto md:mx-0 flex items-center justify-center">
+          {image ? (
+            <Image 
+              src={image} alt={name} width={340} height={453} format="webp"
+              class="absolute inset-0 h-full w-full object-cover object-center"
+            />
+          ) : (
+            <User class="w-32 h-32 text-neutral-800" strokeWidth={1.5} />
+          )}
+        </div>
+
+        <div class="flex-grow flex flex-col justify-start pt-2">
+          <div class="flex flex-wrap items-baseline gap-2 mb-4 pb-4 border-b border-white/5 pr-6">
+            <h3 class="text-2xl sm:text-3xl font-bold text-white font-serif tracking-wide leading-tight">
+              {name}
+            </h3>
+            <span class="text-neutral-500 font-sans text-base select-none hidden sm:inline">•</span>
+            <p class="text-[12px] font-bold text-violet-400 tracking-widest uppercase font-sans leading-none w-full sm:w-auto mt-1 sm:mt-0">
+              {role}
+            </p>
+          </div>
+          
+          <p class="text-neutral-300 text-sm sm:text-base font-sans leading-relaxed">
+            {about || "No biographical information available at this time."}
+          </p>
+        </div>
+
+      </div>
+    </dialog>
+  )}
+
+</div>
+
+<script>
+  const interactiveCards = document.querySelectorAll('.member-card[data-enable-modal="true"]');
+
+  interactiveCards.forEach((card) => {
+    const dialog = card.querySelector('.member-dialog') as HTMLDialogElement;
+    const closeBtn = card.querySelector('.close-button');
+
+    if (!dialog || !closeBtn) return;
+
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.member-dialog')) return;
+      dialog.showModal();
+    });
+
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dialog.close();
+    });
+
+    dialog.addEventListener('click', (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const isClickInside = (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      );
+      if (!isClickInside) {
+        dialog.close();
+      }
+    });
+  });
+</script>

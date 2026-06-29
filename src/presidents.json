@@ -1,0 +1,12 @@
+{
+  "title": "President",
+  "enableModal": false,
+  "members": [
+    {
+      "name": "Simon Corazza",
+      "role": "President",
+      "image": "simonCorazza.jpg",
+      "about": ""
+    }
+  ]
+}
