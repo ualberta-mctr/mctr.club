@@ -1,0 +1,26 @@
+[
+  {
+    "icon": "scroll-text",
+    "title": "Club Constitution",
+    "description": "Read about the procedures, policies, and structure of the club.",
+    "link": "/resources/club-constitution.pdf"
+  },
+  {
+    "icon": "House",
+    "title": "Club Room",
+    "description": "Location, Hours, and amenities. Come visit our community!",
+    "link": "/resources/club-room"
+  },
+  {
+    "icon": "vote",
+    "title": "Elections",
+    "description": "Information about the election cycle, nomination process, and voting.",
+    "link": "/resources/elections"
+  },
+  {
+    "icon": "clapperboard",
+    "title": "GEER Week Movies",
+    "description": "See all our movies and revel in their awesomeness.",
+    "link": "/resources/geer-week-movies"
+  }
+]

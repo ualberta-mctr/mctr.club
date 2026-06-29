@@ -1,26 +1,18 @@
 ---
-import Card from "../../components/Card.astro";
-import Base from "../../layouts/Base.astro";
+import ResourceGrid from "../../components/ResourceGrid.astro";
+import Base from "../../layouts/BaseWide.astro";
+
+import resourcesData from "./resources.json";
 ---
 
 <Base title="Resources">
-    <Card>
-    <h1>Resources Dashboard</h1>
-    <p>Select a category below to view our resources:</p>
+  <div class="py-12 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <h1
+      class="text-3xl sm:text-4xl md:text-5xl text-white font-serif text-center mb-20 tracking-tight"
+    >
+      This Is Your Resource Hub
+    </h1>
 
-    <ul>
-      <li>
-        <a href="/resources/club-room">Club Room</a>
-      </li>
-      <li>
-        <a href="/resources/elections">Elections</a>
-      </li>
-      <li>
-        <a href="/resources/club-constitution">Club Constitution</a>
-      </li>
-      <li>
-        <a href="/resources/geer-week-movies">Geer Week Movies</a>
-      </li>
-    </ul>
-    </Card>
+    <ResourceGrid title="Resources" resources={resourcesData} />
+  </div>
 </Base>

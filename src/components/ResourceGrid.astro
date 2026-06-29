@@ -1,0 +1,42 @@
+---
+import ResourceCard from './ResourceCard.astro';
+
+interface Resource {
+  icon: string;
+  title: string;
+  description: string;
+  link: string;
+}
+
+interface Props {
+  title?: string;
+  resources: Resource[];
+}
+
+const { title, resources } = Astro.props;
+---
+
+<div class="w-full mb-20 last:mb-0">
+  
+  {title && (
+    <div class="flex items-center justify-center gap-4 mb-12 w-full max-w-5xl mx-auto px-4">
+      <div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+      <h2 class="text-sm font-bold tracking-[0.3em] uppercase text-violet-400 whitespace-nowrap font-sans">
+        {title}
+      </h2>
+      <div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+    </div>
+  )}
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8 max-w-[1550px] mx-auto w-full px-4 sm:px-6">
+    {resources.map((item) => (
+      <ResourceCard 
+        icon={item.icon}
+        title={item.title}
+        description={item.description}
+        link={item.link}
+      />
+    ))}
+  </div>
+  
+</div>
