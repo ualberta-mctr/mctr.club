@@ -19,6 +19,7 @@
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/newsreader": "^5.2.10",
     "@schedule-x/calendar": "^4.6.1",
+    "@schedule-x/event-modal": "^4.6.1",
     "@schedule-x/events-service": "^4.6.1",
     "@schedule-x/theme-default": "^4.6.1",
     "@tailwindcss/vite": "^4.3.1",

@@ -32,7 +32,6 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
   #schedule-x-calendar {
     width: 100%;
     height: 500px;
-    overflow-y: auto;
     border-radius: 8px;
   }
 
@@ -56,6 +55,16 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
     z-index: 10;
     padding-top: 0.5rem;
   }
+
+  :global(.sx__view-selection) {
+    display: none !important;
+  }
+
+  :global(.sx__date-picker-wrapper) {
+    pointer-events: none !important;
+    cursor: default !important;
+    display: none !important; 
+  }
 </style>
 
 <script>
@@ -63,7 +72,6 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
 
   if (container) {
     const endpoint = container.dataset.endpoint || "/api/google-calendar-events";
-
     const observer = new IntersectionObserver(async (entries, obs) => {
       if (entries[0].isIntersecting) {
         obs.disconnect();
@@ -71,23 +79,27 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
         try {
           const [
             _, 
-            { createCalendar, viewMonthGrid }, 
+            { createCalendar, viewMonthGrid, viewMonthAgenda }, 
             { createEventsServicePlugin }, 
+            { createEventModalPlugin },
             apiResponse
           ] = await Promise.all([
             import("temporal-polyfill/global"),
             import("@schedule-x/calendar"),
             import("@schedule-x/events-service"),
+            import("@schedule-x/event-modal"),
             fetch(endpoint).catch(() => null)
           ]);
 
           const eventsService = createEventsServicePlugin();
+          const eventModal = createEventModalPlugin();
+
           const calendar = createCalendar({
-            views: [viewMonthGrid],
+            views: [viewMonthGrid, viewMonthAgenda],
             defaultView: viewMonthGrid.name,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Edmonton",
             events: [],
-            plugins: [eventsService],
+            plugins: [eventsService, eventModal],
           });
 
           calendar.render(container);
@@ -103,13 +115,11 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
           container.innerHTML = `<div class="calendar-loading" style="color: #ef4444;">Failed to load calendar.</div>`;
         }
       }
-    }, { rootMargin: "300px" }); 
-
+    }, { rootMargin: "300px" });
     observer.observe(container);
 
     function formatGoogleEventsForScheduleX(events) {
       if (!Array.isArray(events)) return [];
-
       return events
         .map((event) => {
           if (!event || event.status === "cancelled") return null;
