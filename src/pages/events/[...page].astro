@@ -6,6 +6,7 @@ import { CalendarDays, MapPin, CalendarClock } from "lucide-astro";
 import PageLayout from "../../layouts/BaseWide.astro";
 import { withBase } from "../../utils/path";
 import type { GetStaticPaths, Page } from "astro";
+import PublicCalendar from "../../components/PublicCalendar.astro";
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const MAX_EVENTS_PER_PAGE = 24; 
@@ -43,12 +44,20 @@ today.setHours(0, 0, 0, 0);
 ---
 
 <PageLayout description={meta.description} title={meta.title}>
+		<div class="flex items-center justify-center gap-4 mb-8 w-full max-w-5xl mx-auto px-4">
+			<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+			<h1 class="text-sm font-bold tracking-[0.3em] uppercase text-violet-400 whitespace-nowrap font-sans m-0">
+				Calendar
+			</h1>
+			<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+		</div>
+	<PublicCalendar />
 	<section class="events-section w-full mb-20">
 		
 		<div class="flex items-center justify-center gap-4 mb-8 w-full max-w-5xl mx-auto px-4">
 			<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
 			<h1 class="text-sm font-bold tracking-[0.3em] uppercase text-violet-400 whitespace-nowrap font-sans m-0">
-				Events
+				List
 			</h1>
 			<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
 		</div>

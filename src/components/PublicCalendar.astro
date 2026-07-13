@@ -1,0 +1,161 @@
+---
+import "@schedule-x/theme-default/dist/index.css";
+
+export interface Props {
+  endpoint?: string;
+}
+
+const { endpoint = "/api/google-calendar-events" } = Astro.props;
+---
+
+<div class="calendar-wrapper">
+  <div id="schedule-x-calendar" data-endpoint={endpoint}>
+    <div class="calendar-loading">Loading calendar...</div>
+  </div>
+</div>
+
+<style>
+  .calendar-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      sans-serif;
+  }
+
+  #schedule-x-calendar {
+    width: 100%;
+    height: 500px;
+    overflow-y: auto;
+    border-radius: 8px;
+  }
+
+  .calendar-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #8b5cf6; 
+    font-family: monospace;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(14, 14, 22, 0.4);
+    border-radius: 8px;
+  }
+
+  :global(.sx__calendar-header) {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding-top: 0.5rem;
+  }
+</style>
+
+<script>
+  const container = document.getElementById("schedule-x-calendar");
+
+  if (container) {
+    const endpoint = container.dataset.endpoint || "/api/google-calendar-events";
+
+    const observer = new IntersectionObserver(async (entries, obs) => {
+      if (entries[0].isIntersecting) {
+        obs.disconnect();
+
+        try {
+          const [
+            _, 
+            { createCalendar, viewMonthGrid }, 
+            { createEventsServicePlugin }, 
+            apiResponse
+          ] = await Promise.all([
+            import("temporal-polyfill/global"),
+            import("@schedule-x/calendar"),
+            import("@schedule-x/events-service"),
+            fetch(endpoint).catch(() => null)
+          ]);
+
+          const eventsService = createEventsServicePlugin();
+          const calendar = createCalendar({
+            views: [viewMonthGrid],
+            defaultView: viewMonthGrid.name,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Edmonton",
+            events: [],
+            plugins: [eventsService],
+          });
+
+          calendar.render(container);
+
+          if (apiResponse && apiResponse.ok) {
+            const data = await apiResponse.json();
+            const rawEvents = data.items || data;
+            const formattedEvents = formatGoogleEventsForScheduleX(rawEvents);
+            eventsService.set(formattedEvents);
+          }
+        } catch (error) {
+          console.error("Error initializing lazy calendar:", error);
+          container.innerHTML = `<div class="calendar-loading" style="color: #ef4444;">Failed to load calendar.</div>`;
+        }
+      }
+    }, { rootMargin: "300px" }); 
+
+    observer.observe(container);
+
+    function formatGoogleEventsForScheduleX(events) {
+      if (!Array.isArray(events)) return [];
+
+      return events
+        .map((event) => {
+          if (!event || event.status === "cancelled") return null;
+
+          const isAllDay = !event.start?.dateTime;
+          const rawStart = isAllDay ? event.start?.date : event.start?.dateTime;
+          const rawEnd = isAllDay ? event.end?.date : event.end?.dateTime;
+
+          if (!rawStart || !rawEnd) return null;
+
+          const toTemporal = (dateStr, timeZone, isEnd = false) => {
+            if (isAllDay) {
+              const plainDate = Temporal.PlainDate.from(dateStr);
+              if (isEnd) {
+                const startDate = Temporal.PlainDate.from(rawStart);
+                const adjustedEnd = plainDate.subtract({ days: 1 });
+                return Temporal.PlainDate.compare(adjustedEnd, startDate) >= 0
+                  ? adjustedEnd
+                  : startDate;
+              }
+              return plainDate;
+            }
+
+            if (dateStr.includes("[")) {
+              return Temporal.ZonedDateTime.from(dateStr);
+            }
+
+            const tz = timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Edmonton";
+            return Temporal.Instant.from(dateStr).toZonedDateTimeISO(tz);
+          };
+
+          try {
+            return {
+              id: String(event.id || Math.random()),
+              title: event.summary || "Busy",
+              start: toTemporal(rawStart, event.start?.timeZone, false),
+              end: toTemporal(rawEnd, event.end?.timeZone, true),
+              description: event.description || "",
+              location: event.location || "",
+            };
+          } catch (err) {
+            console.warn(`Skipping event "${event.summary}" due to Temporal parsing error:`, err);
+            return null;
+          }
+        })
+        .filter(Boolean);
+    }
+  }
+</script>
