@@ -20,19 +20,79 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
     max-width: 1200px;
     margin: 0 auto;
     padding: 1rem;
-    font-family:
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      sans-serif;
+    font-family: var(--font-sans), system-ui, sans-serif;
   }
 
   #schedule-x-calendar {
+    position: relative;
     width: 100%;
     height: 500px;
-    border-radius: 8px;
+    border-radius: 1rem; /* rounded-2xl */
+    background-color: rgba(14, 14, 22, 0.8); /* bg-[#0e0e16]/80 */
+    backdrop-filter: blur(24px); /* backdrop-blur-xl */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* border-white/10 */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.03); /* custom white shadow glow */
+    overflow: hidden;
+
+    --sx-border: rgba(255, 255, 255, 0.1) !important;
+    --sx-color-outline: rgba(255, 255, 255, 0.1); /* Border line matching border-white/10 */
+    --sx-color-outline-variant: rgba(255, 255, 255, 0.1);
+    
+    --sx-color-primary: #a78bfa; /* violet-400 */
+    --sx-color-on-primary: #0e0e16; 
+    --sx-color-primary-container: rgba(167, 139, 250, 0.15); 
+    --sx-color-on-primary-container: #a78bfa; 
+    
+    --sx-color-secondary: #9ca3af; /* gray-400 */
+    --sx-color-on-secondary: #ffffff;
+    
+    --sx-color-surface: transparent; 
+    --sx-color-surface-dim: rgba(14, 14, 22, 0.6);
+    --sx-color-surface-bright: rgba(255, 255, 255, 0.05);
+    --sx-color-on-surface: #ffffff; /* primary text (white) */
+    
+    --sx-color-surface-container: rgba(255, 255, 255, 0.02);
+    --sx-color-surface-container-low: rgba(255, 255, 255, 0.01);
+    --sx-color-surface-container-high: rgba(255, 255, 255, 0.06);
+    
+    --sx-color-background: transparent;
+    --sx-color-on-background: #ffffff;
+    
+    --sx-color-shadow: rgba(255, 255, 255, 0.03); 
+    --sx-color-surface-tint: #a78bfa;
+    --sx-color-neutral: #9ca3af; /* secondary text (gray-400) */
+    --sx-color-neutral-variant: rgba(255, 255, 255, 0.3);
+    
+    --sx-internal-color-gray-ripple-background: rgba(255, 255, 255, 0.1);
+    --sx-internal-color-light-gray: rgba(255, 255, 255, 0.02);
+    --sx-internal-color-text: #ffffff;
+  }
+
+  /* --- Precise Grid Internal Borders Style Adjustment --- */
+  :global(.sx__month-grid-day),
+  :global(.sx__month-grid-day-name),
+  :global(.sx__week-grid__day),
+  :global(.sx__time-grid-day) {
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+
+  :global(.sx__range-heading),
+  :global(.sx__event-title),
+  :global(.sx__event-modal__title),
+  :global(.sx__event-modal-title),
+  :global(.sx__month-grid-day-number) {
+    font-family: var(--font-serif) !important;
+  }
+
+  #schedule-x-calendar,
+  :global(.sx__time-max-width),
+  :global(.sx__week-grid__day-header),
+  :global(.sx__today-button),
+  :global(.sx__month-grid-day-name),
+  :global(.sx__event-modal-description),
+  :global(.sx__event-modal) {
+    font-family: var(--font-sans) !important;
   }
 
   .calendar-loading {
@@ -40,36 +100,69 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
     align-items: center;
     justify-content: center;
     height: 100%;
-    color: #8b5cf6; 
-    font-family: monospace;
+    color: #a78bfa; 
+    font-family: var(--font-sans), monospace;
     font-size: 14px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     background: rgba(14, 14, 22, 0.4);
-    border-radius: 8px;
+    border-radius: 1rem;
   }
 
   :global(.sx__calendar-header) {
     position: sticky;
     top: 0;
     z-index: 10;
-    padding-top: 0.5rem;
+    padding: 0.75rem 1rem 0.5rem 1rem;
+    background-color: rgba(14, 14, 22, 0.4) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  :global(.sx__view-selection) {
-    display: none !important;
-  }
-
+  :global(.sx__view-selection),
   :global(.sx__date-picker-wrapper) {
-    pointer-events: none !important;
-    cursor: default !important;
     display: none !important; 
+  }
+
+  :global(.sx__chevron-button), 
+  :global(.sx__today-button) {
+    color: #9ca3af !important; 
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: transparent !important;
+    border-radius: 0.5rem !important;
+  }
+
+  :global(.sx__chevron-button:hover), 
+  :global(.sx__today-button:hover) {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  :global(.sx__event-modal) {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    z-index: 99999 !important;
+    width: 90% !important;
+    max-width: 420px !important;
+    background-color: rgba(20, 20, 30, 0.96) !important;
+    backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 20px rgba(255, 255, 255, 0.03) !important;
+    color: #ffffff !important;
+  }
+
+  :global(.sx__event-modal::before),
+  :global(.sx__event-modal::after) {
+    display: none !important;
   }
 </style>
 
 <script>
   const container = document.getElementById("schedule-x-calendar");
-
   if (container) {
     const endpoint = container.dataset.endpoint || "/api/google-calendar-events";
     const observer = new IntersectionObserver(async (entries, obs) => {
@@ -97,13 +190,13 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
           const calendar = createCalendar({
             views: [viewMonthGrid, viewMonthAgenda],
             defaultView: viewMonthGrid.name,
+            firstDayOfWeek: 7,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Edmonton",
             events: [],
             plugins: [eventsService, eventModal],
           });
 
           calendar.render(container);
-
           if (apiResponse && apiResponse.ok) {
             const data = await apiResponse.json();
             const rawEvents = data.items || data;
