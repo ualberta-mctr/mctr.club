@@ -8,7 +8,7 @@
   {
     "icon": "House",
     "title": "Club Room",
-    "description": "Location, Hours, and amenities. Come visit our community!",
+    "description": "Location, hours, and amenities. Come visit our community!",
     "link": "/resources/club-room"
   },
   {
@@ -22,5 +22,29 @@
     "title": "GEER Week Movies",
     "description": "See all our movies and revel in their awesomeness.",
     "link": "/resources/geer-week-movies"
+  },
+  {
+    "icon": "workflow",
+    "title": "MCTR Visualizer",
+    "description": "A visual guide to the mechatronics program",
+    "link": "https://sites.ualberta.ca/~dnobes/Eng_Programs/Programs_25_26/MecTronE_Visualizer/index.html"
+  }, 
+  {
+    "icon": "calendar-minus-2",
+    "title": "MCTR Calendar",
+    "description": "The official university calendar for the mechatronics program",
+    "link": "https://calendar.ualberta.ca/preview_program.php?catoid=69&poid=111020&returnto=20848"
+  },
+  {
+    "icon": "code-xml",
+    "title": "Contribute",
+    "description": "A guide on contributing to the mctr.club site",
+    "link": "/resources/contribute"
+  },
+  {
+    "icon": "arrow-down",
+    "title": "Markdown Guide",
+    "description": "A starter guide on how to write markdown",
+    "link": "/resources/markdown-guide"
   }
 ]

@@ -19,4 +19,4 @@ The Club shall maintain fair and democratic elections for the Executive position
 The elections shall be conducted electronically and by instant run-off vote until one candidate has over 50% of the votes. Each race shall have ‘None of the Above’ as one of the options and should this option win, the position is left vacant and will be filled by a byelection. Voting shall be conducted with secret ballots.
 
 ## Additional Information
-For a more detailed breakdown of the election process, consult the club constitution.
+For a more detailed breakdown of the election process, consult the [club constitution](/resources/club-constitution.pdf).

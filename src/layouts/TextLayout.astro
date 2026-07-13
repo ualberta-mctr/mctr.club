@@ -1,18 +1,18 @@
 ---
 import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { formatEyebrowDate, formatBylineDate } from "../utils/date";
 import BaseLayout from "./Base.astro";
 
 interface Props {
 	frontmatter: {
 		title: string;
 		description: string;
-		author?: string;
 		publishDate: string;
 		updatedDate?: string;
-		coverImage?: { src: string; alt: string };
-		tags?: string[];
+		coverImage?: { src: ImageMetadata | string; alt: string };
 		draft?: boolean;
-		minutesRead?: string;
+		eyebrowPrefix?: string;
 	};
 }
 
@@ -20,18 +20,16 @@ const { frontmatter } = Astro.props;
 const {
 	title,
 	description,
-	author,
 	publishDate,
 	updatedDate,
 	coverImage,
-	tags,
 	draft,
-	minutesRead,
+	eyebrowPrefix,
 } = frontmatter;
 
 const pubDate = new Date(publishDate);
 const upDate = updatedDate ? new Date(updatedDate) : undefined;
-const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
+const eyebrowDate = formatEyebrowDate(pubDate);
 ---
 
 <BaseLayout description={description} title={title}>
@@ -39,8 +37,16 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 	<div class="post-shell">
 		<div class="post-main" data-pagefind-body>
 			<div id="blog-hero" class="post-header">
+				<div class="post-eyebrow">
+					<slot name="eyebrow-prefix">{eyebrowPrefix || "Article"}</slot> <span class="sep">·</span> {eyebrowDate}
+				</div>
+
 				{draft && <span class="draft-flag">(Draft)</span>}
 				<h1 class="post-title">{title}</h1>
+				
+				<!-- Slot for blog byline, tags, or event details -->
+				<slot name="after-title" />
+
 				{upDate && (
 					<div class="post-updated">
 						Updated <time datetime={upDate.toISOString()}>
@@ -69,7 +75,6 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 			<article class="post-article">
 				<slot />
 			</article>
-
 		</div>
 	</div>
 
@@ -96,7 +101,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 <style>
 	.post-shell { 
         display: block;
-	    position: relative; 
+        position: relative; 
     }
 
 	.reading-progress {
@@ -105,7 +110,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		left: 0;
 		height: 2px;
 		width: 0;
-		background: #8b5cf6; /* Tailwind violet-500 */
+		background: #8b5cf6;
 		z-index: 100;
 		pointer-events: none;
 		transition: width 0.05s linear;
@@ -120,12 +125,28 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		width: 100%;
 		height: auto;
 		max-height: 380px;
-		object-fit: cover;
-		border: 1px solid #262626; /* neutral-800 */
+		object-fit: contain;
+		border: 1px solid #262626;
 		border-radius: 4px;
 		background: rgba(14, 14, 22, 0.8);
-        backdrop-filter: blur(24px);
+		backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
+	}
+
+	.post-eyebrow {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: #a3a3a3;
+		margin-bottom: 22px;
+		font-variant-numeric: tabular-nums;
+		font-feature-settings: "tnum";
+	}
+	.post-eyebrow .sep {
+		color: #404040;
+		margin: 0 8px;
 	}
 
 	.draft-flag {
@@ -143,7 +164,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		font-size: clamp(28px, 5.5vw, 46px);
 		letter-spacing: -0.022em;
 		line-height: 1.1;
-		color: #e5e5e5; /* neutral-200 */
+		color: #e5e5e5;
 		margin: 0 0 18px;
 		word-wrap: break-word;
 		overflow-wrap: break-word;
@@ -187,7 +208,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		border: 1px solid transparent;
 		background: rgba(14, 14, 22, 0.8);
         backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
+		-webkit-backdrop-filter: blur(24px);
 		color: #a3a3a3;
 		cursor: pointer;
 		opacity: 0;
@@ -218,14 +239,12 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 
 	@media (max-width: 720px) {
 		.post-title { font-size: 30px; line-height: 1.15; }
-		.byline { font-size: 15.5px; }
 		.rule { margin-bottom: 32px; }
 	}
 	@media (max-width: 420px) {
 		.post-eyebrow { font-size: 11px; margin-bottom: 18px; }
 		.post-eyebrow .sep { margin: 0 6px; }
 		.post-title { font-size: 26px; }
-		.byline { font-size: 14.5px; margin-bottom: 24px; }
 		.rule { margin-bottom: 26px; }
 	}
 
@@ -237,6 +256,44 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 </style>
 
 <style is:global>
+	/* Slotted typography styles (Byline, Tags, Separators) */
+	.byline {
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: 16.5px;
+		color: #a3a3a3;
+		margin: 0 0 14px;
+		line-height: 1.5;
+		font-variant-numeric: tabular-nums;
+		font-feature-settings: "tnum";
+	}
+	.byline .sep {
+		color: #404040;
+		margin: 0 6px;
+		font-style: normal;
+	}
+
+	.post-tags {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		color: #a3a3a3;
+		letter-spacing: 0.02em;
+		margin-bottom: 32px;
+		word-break: break-word;
+	}
+	.post-tags .sep {
+		color: #404040;
+		margin: 0 6px;
+	}
+
+	@media (max-width: 720px) {
+		.byline { font-size: 15.5px; }
+	}
+	@media (max-width: 420px) {
+		.byline { font-size: 14.5px; margin-bottom: 24px; }
+	}
+
+	/* Article Content Styles */
 	.post-article {
 		font-family: var(--font-serif);
 		color: #e5e5e5;
@@ -322,7 +379,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		font-family: var(--font-mono);
 		font-size: 14.5px;
 		background: rgba(14, 14, 22, 0.8);
-        backdrop-filter: blur(24px);
+		backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
 		border: 1px solid #262626;
 		padding: 1px 6px;
@@ -334,7 +391,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 	}
 
 	.post-article pre {
-		background: rgba(14, 14, 22, 0.8) !important; /* Force override for syntax highlighters */
+		background: rgba(14, 14, 22, 0.8) !important;
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
 		border: 1px solid #262626;
@@ -363,7 +420,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		padding: 0;
 		list-style: none;
 	}
-	.post-article ul li {
+	.post-article ul > li {
 		position: relative;
 		padding-left: 22px;
 		font-size: 17.5px;
@@ -373,52 +430,61 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		word-wrap: break-word;
 		overflow-wrap: anywhere;
 	}
-	.post-article ul li::before {
+	.post-article ul > li::before {
 		content: "";
 		position: absolute;
 		left: 4px;
-		top: 0.78em;
-		width: 5px;
-		height: 5px;
+		top: 0.68em;
+		width: 6px;
+		height: 6px;
 		border-radius: 50%;
 		background: #8b5cf6;
-	}
-	.post-article ul ul {
-		margin: 10px 0 4px;
-	}
-	.post-article ul ul li {
-		font-size: 17px;
-		color: #a3a3a3;
-		margin-bottom: 6px;
-	}
-	.post-article ul ul li::before {
-		background: transparent;
-		border: 1px solid #8b5cf6;
-		width: 5px;
-		height: 5px;
 	}
 
 	.post-article ol {
 		margin: 0 0 28px;
-		padding-left: 22px;
+		padding-left: 26px;
+		list-style-type: decimal;
 	}
-	.post-article ol li {
+	.post-article ol > li {
 		font-size: 17.5px;
 		line-height: 1.7;
 		color: #e5e5e5;
 		margin-bottom: 10px;
 		padding-left: 6px;
 	}
-	.post-article ol li::marker {
+	.post-article ol > li::marker {
 		color: #8b5cf6;
 		font-family: var(--font-mono);
-		font-size: 14px;
+		font-size: 14.5px;
+		font-weight: 500;
+	}
+
+	.post-article li > ul,
+	.post-article li > ol {
+		margin: 8px 0 4px 14px;
+	}
+	.post-article li > ul > li,
+	.post-article li > ol > li {
+		font-size: 17px;
+		color: #a3a3a3;
+		margin-bottom: 6px;
+	}
+	.post-article li > ul > li::before {
+		background: transparent;
+		border: 1.5px solid #8b5cf6;
+		width: 5px;
+		height: 5px;
+	}
+	.post-article li > li > ul > li::before {
+		background: #8b5cf6;
+		border-radius: 0;
 	}
 
 	.post-article li > p {
 		margin: 0;
 		display: inline;
-	}
+	}	
 
 	.post-article blockquote {
 		margin: 28px 0;
@@ -463,7 +529,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		border: 1px solid #262626;
 		background: rgba(14, 14, 22, 0.8);
         backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
+		-webkit-backdrop-filter: blur(24px);
 	}
 	@media (prefers-reduced-motion: no-preference) {
 		.post-article img[loading="lazy"]:not([data-in]) {
@@ -587,7 +653,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		.post-article h2 { font-size: 20px; margin: 36px 0 14px; }
 		.post-article h3 { font-size: 17px; margin: 26px 0 10px; }
 		.post-article ul { padding-left: 0; }
-		.post-article ul li { padding-left: 18px; }
+		.post-article ul > li { padding-left: 18px; }
 		.post-article blockquote { padding-left: 16px; font-size: 16.5px; }
 		.post-article figcaption { font-size: 13.5px; }
 	}
@@ -614,9 +680,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 		);
 	}
 
-    // The JS logic here is unchanged, but works perfectly now that Base.astro
-    // uses standard min-h-screen scrolling instead of a restricted body container.
-	const progressBar = document.getElementById("reading-progress") as HTMLElement | null;
+    const progressBar = document.getElementById("reading-progress") as HTMLElement | null;
 	if (progressBar) {
 		const update = () => {
 			const h = document.documentElement;
@@ -650,7 +714,7 @@ const articleDate = upDate?.toISOString() ?? pubDate.toISOString();
 	const slugify = (s: string) =>
 		s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 	const usedIds = new Set<string>();
-
+		
 	document
 		.querySelectorAll<HTMLHeadingElement>(".post-article h2, .post-article h3")
 		.forEach((h) => {

@@ -1,0 +1,136 @@
+---
+import type { ImageMetadata } from "astro";
+import { CalendarDays, MapPin, Tags } from "lucide-astro";
+import { formatBylineDate } from "../utils/date";
+import TextLayout from "./TextLayout.astro";
+
+interface Props {
+	frontmatter: {
+		name: string;
+		description?: string;
+		date: string | Date;
+		location?: string;
+		coverImage?: { src: ImageMetadata | string; alt: string };
+		tags?: string[];
+		draft?: boolean;
+	};
+}
+
+const { frontmatter } = Astro.props;
+const { name, description = "", date, location, coverImage, tags, draft } = frontmatter;
+
+const eventDate = new Date(date);
+const bylineDate = formatBylineDate(eventDate);
+---
+
+<TextLayout
+	frontmatter={{
+		title: name,
+		description,
+		publishDate: eventDate.toISOString(),
+		coverImage,
+		draft,
+	}}
+>
+	<span slot="eyebrow-prefix">Events</span>
+
+	<div slot="after-title" class="event-details-row">
+		<!-- Date Detail -->
+		<div class="event-detail-item">
+			<CalendarDays class="event-icon" />
+			<time datetime={eventDate.toISOString()}>{bylineDate}</time>
+		</div>
+
+		<!-- Location Detail -->
+		{location && (
+			<>
+				<span class="event-sep" aria-hidden="true">·</span>
+				<div class="event-detail-item">
+					<MapPin class="event-icon" />
+					<span>{location}</span>
+				</div>
+			</>
+		)}
+
+		<!-- Tags Detail -->
+		{!!tags?.length && (
+			<>
+				<span class="event-sep" aria-hidden="true">·</span>
+				<div class="event-detail-item">
+					<Tags class="event-icon" />
+					<div class="event-tags-list">
+						{tags.map((tag, i) => (
+							<>
+								<span data-pagefind-filter="tag">{tag}</span>{i < tags.length - 1 && <span class="tag-sep">·</span>}
+							</>
+						))}
+					</div>
+				</div>
+			</>
+		)}
+	</div>
+
+	<slot />
+</TextLayout>
+
+<style>
+	.event-details-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px 14px;
+		margin-top: 12px;
+		margin-bottom: 24px;
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: 16.5px;
+		color: #a3a3a3;
+	}
+
+	.event-detail-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		white-space: nowrap;
+	}
+
+	.event-icon {
+		width: 16px;
+		height: 16px;
+		color: #8b5cf6;
+		flex-shrink: 0;
+	}
+
+	.event-sep {
+		color: #404040;
+		font-style: normal;
+		user-select: none;
+	}
+
+	.event-tags-list {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		flex-wrap: wrap;
+	}
+
+	.tag-sep {
+		color: #404040;
+		margin: 0 4px;
+	}
+
+	/* Responsive: Stacks each item onto its own line on mobile screens */
+	@media (max-width: 640px) {
+		.event-details-row {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 12px;
+		}
+		.event-sep {
+			display: none;
+		}
+		.event-detail-item {
+			white-space: normal;
+		}
+	}
+</style>

@@ -1,4 +1,5 @@
 ---
+layout: ../../layouts/TextLayout.astro
 title: "Website Administration"
 description: "A guide on how the website is structured"
 publishDate: "2026-06-23"
@@ -10,7 +11,7 @@ tags: ['admin', 'housekeeping']
 The purpose of the article is to proivide any interested contributors as well as any future maintainers of the mechatronics website a guide on how the website is structured. 
 
 ## Updates
-The updates are managed as Astro Content Collections. To keep images and articles as organized bundles, each update has the following file structure in the project directory
+Updates live as .md files in src/content/updates/, manage by Astro Content Collections. To keep images and articles as organized bundles, each update has the following file structure in the project directory
 ```
 src/
 └── content/
