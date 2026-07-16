@@ -18,14 +18,16 @@ const { name, role, image, about, enableModal } = Astro.props;
   data-enable-modal={enableModal ? "true" : "false"}
 >
   
-  <div class="relative w-full aspect-[3/4] shrink-0 overflow-hidden rounded-xl border border-white/5 bg-neutral-900 flex items-center justify-center">
+  <div class="relative w-full aspect-[3/4] shrink-0 overflow-hidden rounded-xl border border-white/5 bg-neutral-900">
     {image ? (
       <Image 
-        src={image} alt={name} width={340} height={453} format="webp"
-        class="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+        src={image} alt={name} width={450} format="webp"
+        class="absolute inset-0 w-full h-full object-cover object-center block transition-transform duration-500 group-hover:scale-105"
       />
     ) : (
-      <User class="w-24 h-24 text-neutral-800 transition-transform duration-500 group-hover:scale-110 group-hover:text-violet-500/30" strokeWidth={1.5} />
+      <div class="absolute inset-0 flex items-center justify-center">
+        <User class="w-24 h-24 text-neutral-800 transition-transform duration-500 group-hover:scale-110 group-hover:text-violet-500/30" strokeWidth={1.5} />
+      </div>
     )}
   </div>
 
@@ -45,14 +47,16 @@ const { name, role, image, about, enableModal } = Astro.props;
         
         <button class="close-button absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full bg-black/60 border border-white/20 text-white hover:bg-black/80 hover:scale-110 text-xl font-sans transition-all z-20 backdrop-blur-md pb-1 shadow-lg">&times;</button>
         
-        <div class="relative w-full md:w-[280px] shrink-0 aspect-[3/4] overflow-hidden rounded-xl border border-white/5 bg-neutral-900 mx-auto md:mx-0 flex items-center justify-center">
+        <div class="relative w-full md:w-[280px] shrink-0 aspect-[3/4] overflow-hidden rounded-xl border border-white/5 bg-neutral-900 mx-auto md:mx-0">
           {image ? (
             <Image 
-              src={image} alt={name} width={340} height={453} format="webp"
-              class="absolute inset-0 h-full w-full object-cover object-center"
+              src={image} alt={name} width={600} format="webp"
+              class="absolute inset-0 w-full h-full object-cover object-center block"
             />
           ) : (
-            <User class="w-32 h-32 text-neutral-800" strokeWidth={1.5} />
+            <div class="absolute inset-0 flex items-center justify-center">
+              <User class="w-32 h-32 text-neutral-800" strokeWidth={1.5} />
+            </div>
           )}
         </div>
 
@@ -80,7 +84,6 @@ const { name, role, image, about, enableModal } = Astro.props;
 
 <script>
   const interactiveCards = document.querySelectorAll('.member-card[data-enable-modal="true"]');
-
   interactiveCards.forEach((card) => {
     const dialog = card.querySelector('.member-dialog') as HTMLDialogElement;
     const closeBtn = card.querySelector('.close-button');

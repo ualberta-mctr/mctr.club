@@ -3,9 +3,13 @@ import { env } from 'cloudflare:workers';
 
 export const prerender = false;
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request }) => {
   const API_KEY = env.GOOGLE_API_KEY || import.meta.env.GOOGLE_API_KEY;
-  const CALENDAR_ID = env.GOOGLE_CALENDAR_ID || import.meta.env.GOOGLE_CALENDAR_ID;
+  
+  const requestUrl = new URL(request.url);
+  const paramCalendarId = requestUrl.searchParams.get("calendarId");
+  
+  const CALENDAR_ID = paramCalendarId || env.GOOGLE_CALENDAR_ID || import.meta.env.GOOGLE_CALENDAR_ID;
 
   if (!API_KEY || !CALENDAR_ID) {
     console.error("API Route Error: Missing environment variables.");

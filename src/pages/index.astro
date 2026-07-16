@@ -1,10 +1,34 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro"
-import Card from "../components/Card.astro"
+import BaseLayout from "../layouts/BaseWide.astro";
+import Card from "../components/Card.astro";
+import PublicCalendar from "../components/PublicCalendar.astro";
 ---
 
 <BaseLayout title="Mechatronics Club">
-            <div class="h-full w-full block font-sans">
-                <Card><p>This is some text about mechatronics</p></Card>
-            </div>
+    <h1 class="text-3xl sm:text-4xl md:text-5xl text-white font-serif text-center mb-10 mt-8 tracking-tight">
+        Welcome to mctr.club!
+    </h1>
+    <!-- BUILD HERO IMAGE CAROUSEL HERE -->
+    <p>
+        Home of UAlberta Mechatronics
+    </p>
+    <div class="flex items-center justify-center gap-4 mb-8 w-full max-w-5xl mx-auto px-4">
+		<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+		<h1 class="text-sm font-bold tracking-[0.3em] uppercase text-violet-400 whitespace-nowrap font-sans m-0">
+			FAQ
+		</h1>
+		<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+	</div>
+    <!-- BUILD FAQ HERE -->
+    <div class="flex items-center justify-center gap-4 mb-8 w-full max-w-5xl mx-auto px-4">
+		<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+		<h1 class="text-sm font-bold tracking-[0.3em] uppercase text-violet-400 whitespace-nowrap font-sans m-0">
+			Club Room Schedule
+		</h1>
+		<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
+	</div>
+    <PublicCalendar
+        calendarId="c_3e17213ad9fb2ba02dfba7210fa3464f35992e2ef329d54cab5f1fbfbcbe89ea@group.calendar.google.com"
+        viewMode="week"
+    />
 </BaseLayout>

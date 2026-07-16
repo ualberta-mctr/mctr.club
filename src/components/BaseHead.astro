@@ -5,6 +5,8 @@ interface Props {
 }
 
 const { title, description = "Home of UAlberta Mechatronics" } = Astro.props;
+
+import { ClientRouter } from "astro:transitions";
 ---
 <head>
     <meta charset="utf-8" />
@@ -34,4 +36,8 @@ const { title, description = "Home of UAlberta Mechatronics" } = Astro.props;
     <meta name="msapplication-TileColor" content="#000000">
     <meta name="msapplication-TileImage" content="/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#000000">
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    
+    <ClientRouter />
 </head>

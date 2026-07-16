@@ -3,13 +3,24 @@ import "@schedule-x/theme-default/dist/index.css";
 
 export interface Props {
   endpoint?: string;
+  viewMode?: "week" | "month";
+  calendarId?: string;
 }
 
-const { endpoint = "/api/google-calendar-events" } = Astro.props;
+const { 
+  endpoint = "/api/google-calendar-events", 
+  viewMode = "week",
+  calendarId 
+} = Astro.props;
 ---
 
 <div class="calendar-wrapper">
-  <div id="schedule-x-calendar" data-endpoint={endpoint}>
+  <div 
+    id="schedule-x-calendar" 
+    data-endpoint={endpoint}
+    data-view-mode={viewMode}
+    data-calendar-id={calendarId}
+  >
     <div class="calendar-loading">Loading calendar...</div>
   </div>
 </div>
@@ -121,12 +132,12 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
 
   :global(.sx__view-selection),
   :global(.sx__date-picker-wrapper) {
-    display: none !important; 
+    display: none !important;
   }
 
   :global(.sx__chevron-button), 
   :global(.sx__today-button) {
-    color: #9ca3af !important; 
+    color: #9ca3af !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     background: transparent !important;
     border-radius: 0.5rem !important;
@@ -161,42 +172,134 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
   }
 </style>
 
+<style is:global>
+  #schedule-x-calendar *::-webkit-scrollbar,
+  #schedule-x-calendar .sx__time-grid-scroll-container::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  #schedule-x-calendar *::-webkit-scrollbar-track,
+  #schedule-x-calendar .sx__time-grid-scroll-container::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+
+  #schedule-x-calendar *::-webkit-scrollbar-thumb,
+  #schedule-x-calendar .sx__time-grid-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 9999px !important;
+  }
+
+  #schedule-x-calendar *::-webkit-scrollbar-thumb:hover,
+  #schedule-x-calendar .sx__time-grid-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+  }
+
+  #schedule-x-calendar *,
+  #schedule-x-calendar .sx__time-grid-scroll-container {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent !important;
+  }
+</style>
+
 <script>
-  const container = document.getElementById("schedule-x-calendar");
-  if (container) {
+  let calendarObserver: IntersectionObserver | null = null;
+  let activeResizeListener: (() => void) | null = null;
+
+  function initCalendar() {
+    if (calendarObserver) {
+      calendarObserver.disconnect();
+      calendarObserver = null;
+    }
+    if (activeResizeListener) {
+      window.removeEventListener("resize", activeResizeListener);
+      activeResizeListener = null;
+    }
+
+    const container = document.getElementById("schedule-x-calendar");
+    if (!container || container.dataset.rendered === "true") return;
+
     const endpoint = container.dataset.endpoint || "/api/google-calendar-events";
-    const observer = new IntersectionObserver(async (entries, obs) => {
+    const calendarId = container.dataset.calendarId;
+    const viewMode = container.dataset.viewMode || "week";
+
+    const fetchUrl = calendarId 
+      ? `${endpoint}?calendarId=${encodeURIComponent(calendarId)}` 
+      : endpoint;
+
+    calendarObserver = new IntersectionObserver(async (entries, obs) => {
       if (entries[0].isIntersecting) {
         obs.disconnect();
+        container.dataset.rendered = "true";
 
         try {
           const [
             _, 
-            { createCalendar, viewMonthGrid, viewMonthAgenda }, 
+            { createCalendar, viewMonthGrid, viewMonthAgenda, viewWeek, viewDay }, 
             { createEventsServicePlugin }, 
             { createEventModalPlugin },
+            { createCalendarControlsPlugin },
+            { createScrollControllerPlugin },
             apiResponse
           ] = await Promise.all([
             import("temporal-polyfill/global"),
             import("@schedule-x/calendar"),
             import("@schedule-x/events-service"),
             import("@schedule-x/event-modal"),
-            fetch(endpoint).catch(() => null)
+            import("@schedule-x/calendar-controls"),
+            import("@schedule-x/scroll-controller"),
+            fetch(fetchUrl).catch(() => null)
           ]);
 
           const eventsService = createEventsServicePlugin();
           const eventModal = createEventModalPlugin();
-
-          const calendar = createCalendar({
-            views: [viewMonthGrid, viewMonthAgenda],
-            defaultView: viewMonthGrid.name,
-            firstDayOfWeek: 7,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Edmonton",
-            events: [],
-            plugins: [eventsService, eventModal],
+          const calendarControls = createCalendarControlsPlugin();
+          
+          const scrollController = createScrollControllerPlugin({
+            initialScroll: '07:30'
           });
 
+          const desktopView = viewMode === "week" ? viewWeek.name : viewMonthGrid.name;
+          const mobileView = viewMode === "week" ? viewDay.name : viewMonthAgenda.name;
+          
+          const isMobileInitial = window.innerWidth < 768;
+          const defaultView = isMobileInitial ? mobileView : desktopView;
+
+          const selectedViews = viewMode === "week" 
+            ? [viewWeek, viewDay] 
+            : [viewMonthGrid, viewMonthAgenda];
+
+          const calendar = createCalendar({
+            views: selectedViews,
+            defaultView: defaultView,
+            firstDayOfWeek: 7,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Edmonton",
+            isResponsive: false, // Prevent built-in layout handler collisions
+            events: [],
+            plugins: [eventsService, eventModal, calendarControls, scrollController], 
+          });
+          
           calendar.render(container);
+
+          let currentView = defaultView;
+          activeResizeListener = () => {
+            if (!calendarControls.$app) return;
+
+            const isNowMobile = window.innerWidth < 768;
+            const targetView = isNowMobile ? mobileView : desktopView;
+            
+            if (targetView !== currentView) {
+              try {
+                calendarControls.setView(targetView);
+                currentView = targetView;
+              } catch (err) {
+                console.warn("Could not switch calendar view:", err);
+              }
+            }
+          };
+
+          window.addEventListener("resize", activeResizeListener);
+
           if (apiResponse && apiResponse.ok) {
             const data = await apiResponse.json();
             const rawEvents = data.items || data;
@@ -209,7 +312,8 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
         }
       }
     }, { rootMargin: "300px" });
-    observer.observe(container);
+    
+    calendarObserver.observe(container);
 
     function formatGoogleEventsForScheduleX(events) {
       if (!Array.isArray(events)) return [];
@@ -261,4 +365,6 @@ const { endpoint = "/api/google-calendar-events" } = Astro.props;
         .filter(Boolean);
     }
   }
+
+  document.addEventListener("astro:page-load", initCalendar);
 </script>

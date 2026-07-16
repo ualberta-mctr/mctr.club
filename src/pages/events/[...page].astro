@@ -25,7 +25,6 @@ interface Props {
 
 const { page } = Astro.props;
 
-// Fetch all tags for the filter UI across ALL pages
 const allEventsForTags = await getCollection("events");
 const uniqueTags = [...new Set(allEventsForTags.flatMap(e => e.data.tags || []))].sort();
 
@@ -44,6 +43,9 @@ today.setHours(0, 0, 0, 0);
 ---
 
 <PageLayout description={meta.description} title={meta.title}>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl text-white font-serif text-center mb-10 mt-8 tracking-tight">
+            This Is Your Events
+        </h1>
 		<div class="flex items-center justify-center gap-4 mb-8 w-full max-w-5xl mx-auto px-4">
 			<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
 			<h1 class="text-sm font-bold tracking-[0.3em] uppercase text-violet-400 whitespace-nowrap font-sans m-0">
@@ -51,7 +53,10 @@ today.setHours(0, 0, 0, 0);
 			</h1>
 			<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
 		</div>
-	<PublicCalendar />
+	<PublicCalendar 
+		calendarId="c_6564419f02ef431b3ac7a293c92799c6288beefbea2c0d260c57a695b1a31af2@group.calendar.google.com" 
+		viewMode="month" 
+	/>
 	<section class="events-section w-full mb-20">
 		
 		<div class="flex items-center justify-center gap-4 mb-8 w-full max-w-5xl mx-auto px-4">
@@ -91,7 +96,7 @@ today.setHours(0, 0, 0, 0);
 					const formattedDate = eventDate.toLocaleDateString("en-CA", {
 						year: "numeric", month: "short", day: "numeric",
 					});
-					
+
 					const eventTags = event.data.tags || [];
 					const displayTags = isPast ? ["Past", ...eventTags] : eventTags;
 					const cardTagData = eventTags.join(",");
@@ -102,12 +107,12 @@ today.setHours(0, 0, 0, 0);
 							class="event-card group relative p-1.5 pb-2.5 w-full sm:w-[220px] md:w-[240px] rounded-2xl bg-[#0e0e16]/80 backdrop-blur-xl border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.03)] transition-all duration-300 flex flex-col cursor-pointer hover:border-violet-500/40 hover:shadow-[0_0_30px_rgba(139,92,246,0.1)] no-underline"
 							data-tags={cardTagData}
 						>
-							<div class="relative w-full aspect-[3/4] shrink-0 overflow-hidden rounded-xl border border-white/5 bg-neutral-900 flex items-center justify-center">
+							<div class="relative w-full aspect-[3/4] shrink-0 overflow-hidden rounded-xl border border-white/5 bg-neutral-900">
 								
 								{displayTags.length > 0 && (
 									<div class="absolute top-2 left-2 right-2 flex flex-wrap gap-1.5 z-10 pointer-events-none">
 										{displayTags.map(tag => (
-											<span class={`px-2 py-0.5 rounded-md text-[9.5px] font-bold font-sans capitalize tracking-wider ${tag === 'Past' ? 'bg-neutral-800 text-neutral-300 border border-neutral-700' : 'bg-violet-500 text-white border border-violet-500'}`}>
+											<span class={`px-2 py-0.5 rounded-md text-[9.5px] font-bold font-sans capitalize tracking-wider ${tag === 'Past' ? 'bg-neutral-800 text-neutral-300 border border-neutral-700' : 'bg-violet-400 text-white border border-violet-400'}`}>
 												{tag}
 											</span>
 										))}
@@ -118,13 +123,14 @@ today.setHours(0, 0, 0, 0);
 									<Image
 										src={event.data.coverImage.src}
 										alt={event.data.coverImage.alt}
-										width={240}
-										height={320}
+										width={480}
 										format="webp"
 										class={`absolute inset-0 h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-105 ${isPast ? 'grayscale group-hover:grayscale-0' : ''}`}
 									/>
 								) : (
-									<CalendarDays class="w-24 h-24 text-neutral-800 transition-transform duration-500 group-hover:scale-110 group-hover:text-violet-500/30" strokeWidth={1.5} />
+									<div class="absolute inset-0 flex items-center justify-center">
+										<CalendarDays class="w-24 h-24 text-neutral-800 transition-transform duration-500 group-hover:scale-110 group-hover:text-violet-500/30" strokeWidth={1.5} />
+									</div>
 								)}
 							</div>
 
@@ -178,19 +184,16 @@ today.setHours(0, 0, 0, 0);
 </PageLayout>
 
 <script>
-	// Client-side filtering logic
 	document.addEventListener('DOMContentLoaded', () => {
 		const filterBtns = document.querySelectorAll('.filter-btn');
 		const cards = document.querySelectorAll('.event-card');
 
 		filterBtns.forEach(btn => {
 			btn.addEventListener('click', () => {
-				// Reset all buttons to inactive Header state
 				filterBtns.forEach(b => {
 					b.classList.remove('bg-[#1c1c27]', 'text-violet-500');
 					b.classList.add('bg-[#0e0e16]/80', 'backdrop-blur-xl', 'text-gray-400', 'hover:bg-[#1c1c27]', 'hover:text-violet-500');
 				});
-				// Set clicked button to active Header state
 				btn.classList.remove('bg-[#0e0e16]/80', 'backdrop-blur-xl', 'text-gray-400', 'hover:bg-[#1c1c27]', 'hover:text-violet-500');
 				btn.classList.add('bg-[#1c1c27]', 'text-violet-500');
 
