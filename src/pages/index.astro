@@ -1,17 +1,17 @@
 ---
-import BaseLayout from "../layouts/BaseWide.astro";
-import PublicCalendar from "../components/PublicCalendar.astro";
-import Button from "../components/Button.astro";
-import Title from "../components/Title.astro";
-import Section from "../components/Section.astro";
-import Carousel from "../components/Carousel.astro";
-import Faq from "../components/Faq.astro"
+import BaseLayout from "@/layouts/BaseWide.astro";
+import PublicCalendar from "@/components/PublicCalendar.astro";
+import Button from "@/components/Button.astro";
+import Title from "@/components/Title.astro";
+import Section from "@/components/Section.astro";
+import Carousel from "@/components/Carousel.astro";
+import Faq from "@/components/Faq.astro";
 ---
 
 <BaseLayout title="Mechatronics Club">
     <!-- Hero Section -->
     <div class="relative -mt-23.5 min-[830px]:-mt-28 min-h-[105vh] w-full flex flex-col items-center justify-start pt-32 sm:pt-40 pb-16 text-center overflow-hidden">
-        <Title>Welcome to mctr.club!</Title>
+        <Title>Welcome to <b class="text-violet-400 font-normal">mctr.club</b>!</Title>
         <p class="-m-8 py-2 text-md sm:text-lg md:text-xl">Home of Mechatronics @ UAlberta</p>
         <div class="m-8 flex flex-wrap items-center justify-center gap-4 w-full">
             <Button href="/about" target="_self">About Us</Button>

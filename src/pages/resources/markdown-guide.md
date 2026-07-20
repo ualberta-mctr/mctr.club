@@ -1,5 +1,5 @@
 ---
-layout: ../../layouts/TextLayout.astro
+layout: '@/layouts/TextLayout.astro'
 title: "Markdown Guide"
 description: "A starter guide on how to write markdown" 
 publishDate: "2026-07-17"

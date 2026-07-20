@@ -3,13 +3,13 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import { CalendarDays, MapPin, CalendarClock } from "lucide-astro";
-import PageLayout from "../../layouts/BaseWide.astro";
-import { withBase } from "../../utils/path";
+import PageLayout from "@/layouts/BaseWide.astro";
+import { withBase } from "@/scripts/path";
 import type { GetStaticPaths, Page } from "astro";
-import PublicCalendar from "../../components/PublicCalendar.astro";
-import Title from "../../components/Title.astro";
-import Section from "../../components/Section.astro";
-import Button from "../../components/Button.astro";
+import PublicCalendar from "@/components/PublicCalendar.astro";
+import Title from "@/components/Title.astro";
+import Section from "@/components/Section.astro";
+import Button from "@/components/Button.astro";
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const MAX_EVENTS_PER_PAGE = 24; 

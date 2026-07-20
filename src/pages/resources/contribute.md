@@ -1,5 +1,5 @@
 ---
-layout: ../../layouts/TextLayout.astro
+layout: '@/layouts/TextLayout.astro'
 title: "Website Administration"
 description: "A guide on how the website is structured"
 publishDate: "2026-06-23"

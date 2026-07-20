@@ -1,5 +1,5 @@
 ---
-layout: ../../layouts/TextLayout.astro
+layout: '@/layouts/TextLayout.astro'
 title: 'The History of Mechatronics at UAlberta'
 description: 'Where it all started'
 publishDate: 2025-09-02

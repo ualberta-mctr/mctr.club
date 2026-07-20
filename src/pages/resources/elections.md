@@ -1,5 +1,5 @@
 ---
-layout: ../../layouts/TextLayout.astro
+layout: '@/layouts/TextLayout.astro'
 title: 'Elections Information'
 description: 'Information about the election cycle, nomination process, and voting.'
 publishDate: 2026-06-28

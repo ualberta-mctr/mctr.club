@@ -1,11 +1,11 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getAllPosts, getPostSortDate, sortMDByDate } from "../../data/post";
-import PageLayout from "../../layouts/Base.astro";
-import { formatRailDate } from "../../utils/date";
-import { withBase } from "../../utils/path";
+import { getAllPosts, getPostSortDate, sortMDByDate } from "@/scripts/post";
+import PageLayout from "@/layouts/Base.astro";
+import { formatRailDate } from "@/scripts/date";
+import { withBase } from "@/scripts/path";
 import type { GetStaticPaths, Page } from "astro";
-import Title from "../../components/Title.astro";
+import Title from "@/components/Title.astro";
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const MAX_POSTS_PER_PAGE = 1000;
