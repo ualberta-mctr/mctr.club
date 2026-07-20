@@ -3,16 +3,12 @@ import ResourceGrid from "../../components/ResourceGrid.astro";
 import Base from "../../layouts/BaseWide.astro";
 
 import resourcesData from "./resources.json";
+import Title from "../../components/Title.astro";
 ---
 
 <Base title="Resources">
-  <div class="py-12 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
-    <h1
-      class="text-3xl sm:text-4xl md:text-5xl text-white font-serif text-center mb-20 tracking-tight"
-    >
-      This Is Your Resource Hub
-    </h1>
-
+  <Title>Spelunking for Resources</Title>
+  <div class="pb-12 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
     <ResourceGrid title="Resources" resources={resourcesData} />
   </div>
 </Base>

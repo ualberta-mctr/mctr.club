@@ -10,6 +10,9 @@ tags: ['admin', 'housekeeping']
 
 The purpose of the article is to proivide any interested contributors as well as any future maintainers of the mechatronics website a guide on how the website is structured. 
 
+## General
+Don't include HEIC assets on the website, convert to a more widely supported like `.png` or `.jpg` first
+
 ## Updates
 Updates live as .md files in src/content/updates/, manage by Astro Content Collections. To keep images and articles as organized bundles, each update has the following file structure in the project directory
 ```

@@ -1,32 +1,39 @@
 ---
 import BaseLayout from "../layouts/BaseWide.astro";
-import Card from "../components/Card.astro";
 import PublicCalendar from "../components/PublicCalendar.astro";
+import Button from "../components/Button.astro";
+import Title from "../components/Title.astro";
+import Section from "../components/Section.astro";
+import Carousel from "../components/Carousel.astro";
+import Faq from "../components/Faq.astro"
 ---
 
 <BaseLayout title="Mechatronics Club">
-    <h1 class="text-3xl sm:text-4xl md:text-5xl text-white font-serif text-center mb-10 mt-8 tracking-tight">
-        Welcome to mctr.club!
-    </h1>
-    <!-- BUILD HERO IMAGE CAROUSEL HERE -->
-    <p>
-        Home of UAlberta Mechatronics
-    </p>
-    <div class="flex items-center justify-center gap-4 mb-8 w-full max-w-5xl mx-auto px-4">
-		<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
-		<h1 class="text-sm font-bold tracking-[0.3em] uppercase text-violet-400 whitespace-nowrap font-sans m-0">
-			FAQ
-		</h1>
-		<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
-	</div>
-    <!-- BUILD FAQ HERE -->
-    <div class="flex items-center justify-center gap-4 mb-8 w-full max-w-5xl mx-auto px-4">
-		<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
-		<h1 class="text-sm font-bold tracking-[0.3em] uppercase text-violet-400 whitespace-nowrap font-sans m-0">
-			Club Room Schedule
-		</h1>
-		<div class="h-[1px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent flex-grow"></div>
-	</div>
+    <!-- Hero Section -->
+    <div class="relative -mt-23.5 min-[830px]:-mt-28 min-h-[105vh] w-full flex flex-col items-center justify-start pt-32 sm:pt-40 pb-16 text-center overflow-hidden">
+        <Title>Welcome to mctr.club!</Title>
+        <p class="-m-8 py-2 text-md sm:text-lg md:text-xl">Home of Mechatronics @ UAlberta</p>
+        <div class="m-8 flex flex-wrap items-center justify-center gap-4 w-full">
+            <Button href="/about" target="_self">About Us</Button>
+            <Button href="/resources" target="_self">Resources</Button>
+        </div>
+
+        <div class="w-full mt-6 sm:mt-8">
+            <Carousel />
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div id="faq" class="scroll-mt-24">
+        <Section>FAQ</Section>
+        <Faq />
+    </div>
+
+    <!-- Club Room Section -->
+    <Section>Club Room Schedule</Section>
+    <div class="flex flex-wrap items-center justify-center gap-4 w-full">
+        <Button href="https://calendar.google.com/calendar/render?cid=c_3e17213ad9fb2ba02dfba7210fa3464f35992e2ef329d54cab5f1fbfbcbe89ea@group.calendar.google.com" target="_blank">Add to calendar</Button>
+    </div>
     <PublicCalendar
         calendarId="c_3e17213ad9fb2ba02dfba7210fa3464f35992e2ef329d54cab5f1fbfbcbe89ea@group.calendar.google.com"
         viewMode="week"

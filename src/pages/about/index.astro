@@ -5,15 +5,12 @@ import directors from "./directors.json"
 
 import Base from "../../layouts/BaseWide.astro";
 import TeamGrid from "../../components/TeamGrid.astro";
+import Title from "../../components/Title.astro";
 ---
 
 <Base title="About">
-    <div class="py-12 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        
-        <h1 class="text-3xl sm:text-4xl md:text-5xl text-white font-serif text-center mb-10 tracking-tight">
-            This Is Your Executive Team
-        </h1>
-        
+    <Title>Campaigning for You</Title>
+    <div class="pb-12 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <TeamGrid {...presidents} /> 
         <TeamGrid {...vicePresidents} />
         <TeamGrid {...directors} />

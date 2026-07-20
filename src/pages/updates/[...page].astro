@@ -5,6 +5,7 @@ import PageLayout from "../../layouts/Base.astro";
 import { formatRailDate } from "../../utils/date";
 import { withBase } from "../../utils/path";
 import type { GetStaticPaths, Page } from "astro";
+import Title from "../../components/Title.astro";
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const MAX_POSTS_PER_PAGE = 1000;
@@ -43,6 +44,7 @@ const totalCount = page.total;
 ---
 
 <PageLayout description={meta.description} title={meta.title}>
+	<Title>Scoping for Updates</Title>
 	<section class="writing" aria-labelledby="writing-label">
 		<div class="section-label" id="writing-label">Updates · {totalCount} posts</div>
 		<div class="timeline">

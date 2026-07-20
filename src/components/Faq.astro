@@ -1,0 +1,93 @@
+---
+import { ChevronDown } from "lucide-astro";
+import faqItems from "../faq.json";
+---
+
+<section id="faq" class="relative">
+  <div class="mx-auto max-w-4xl">
+    <div class="space-y-4 pb-8">
+      {
+        faqItems.map((item, index) => {
+          const buttonId = `faq-button-${index}`;
+          const panelId = `faq-panel-${index}`;
+
+          return (
+            <div
+              class={`scroll-fade-up rounded-2xl bg-[#0e0e16]/80 backdrop-blur-xl border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.03)] transition-colors duration-300 hover:border-violet-400/40 stagger-${(index % 9) + 1}`}
+            >
+              <h3>
+                <button
+                  id={buttonId}
+                  class="faq-button flex w-full items-center justify-between px-6 py-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-inset rounded-2xl"
+                  aria-expanded="false"
+                  aria-controls={panelId}
+                >
+                  <span class="pr-8 font-semibold text-white transition-colors duration-200 group-hover:text-violet-400">
+                    {item.question}
+                  </span>
+                  <ChevronDown 
+                    class="faq-icon h-5 w-5 flex-shrink-0 text-violet-400 transition-transform duration-300" 
+                    aria-hidden="true" 
+                  />
+                </button>
+              </h3>
+
+              <div
+                id={panelId}
+                role="region"
+                aria-labelledby={buttonId}
+                inert
+                class="faq-content grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out"
+              >
+                <div class="overflow-hidden">
+                  <div
+                    class="px-6 pb-5 text-gray-300 leading-relaxed [&_a]:font-medium [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-violet-500 [&_a]:transition-colors [&_a]:focus-visible:outline-none [&_a]:focus-visible:ring-2 [&_a]:focus-visible:ring-violet-400 [&_a]:rounded"
+                    set:html={item.answer}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const faqButtons = document.querySelectorAll(".faq-button");
+
+    faqButtons.forEach((button) => {
+      const newButton = button.cloneNode(true) as Element;
+      button.parentNode?.replaceChild(newButton, button);
+
+      newButton.addEventListener("click", () => {
+        const controlsId = newButton.getAttribute("aria-controls");
+        const content = controlsId ? document.getElementById(controlsId) : null;
+        const icon = newButton.querySelector(".faq-icon") as HTMLElement;
+        const isExpanded = newButton.getAttribute("aria-expanded") === "true";
+
+        newButton.setAttribute("aria-expanded", String(!isExpanded));
+
+        if (content) {
+          if (!isExpanded) {
+            content.classList.remove("grid-rows-[0fr]");
+            content.classList.add("grid-rows-[1fr]");
+            content.removeAttribute("inert");
+          } else {
+            content.classList.remove("grid-rows-[1fr]");
+            content.classList.add("grid-rows-[0fr]");
+            content.setAttribute("inert", "");
+          }
+        }
+
+        if (icon) {
+          icon.style.transform = !isExpanded
+            ? "rotate(180deg)"
+            : "rotate(0deg)";
+        }
+      });
+    });
+  });
+</script>

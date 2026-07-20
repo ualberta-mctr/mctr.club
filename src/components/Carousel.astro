@@ -1,0 +1,275 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+const imagesGlob = import.meta.glob<{ default: ImageMetadata }>(
+	"/src/assets/carousel/*.{jpeg,jpg,png,gif,webp,JPEG,JPG,PNG,GIF,WEBP}",
+	{ eager: true }
+);
+
+const images = Object.entries(imagesGlob)
+	.sort(([pathA], [pathB]) => pathA.localeCompare(pathB))
+	.map(([_, module]) => module.default);
+
+const imageSets = [images, images, images, images, images, images, images, images, images, images, images];
+---
+
+{images.length > 0 && (
+	<div class="carousel-mask relative w-full max-w-full overflow-hidden py-4 my-2 select-none">
+		<div 
+			class="flex items-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar h-[62vh] min-h-[460px] sm:h-[68vh] sm:min-h-[560px] md:h-[72vh] md:min-h-[640px] md:max-h-[820px] cursor-grab active:cursor-grabbing w-full px-4"
+			id="hero-carousel"
+			aria-label="Featured club photos"
+		>
+			{imageSets.map((set, setIndex) => 
+				set.map((image, index) => {
+					const isLcp = setIndex === 5 && index < 3;
+					
+					return (
+						<div 
+							class="h-full shrink-0 rounded-2xl overflow-hidden border border-white/10 bg-neutral-900/80 shadow-[0_0_20px_rgba(0,0,0,0.5)] relative group"
+							style={{ aspectRatio: `${image.width} / ${image.height}` }}
+						>
+							<Image
+								src={image}
+								alt={`Mechatronics Club photo ${index + 1}`}
+								widths={[360, 540, 720, 960]}
+								sizes="(max-width: 640px) 360px, (max-width: 768px) 540px, (max-width: 1024px) 720px, 960px"
+								format="webp"
+								loading={isLcp ? "eager" : "lazy"}
+								fetchpriority={isLcp ? "high" : "auto"}
+								decoding={isLcp ? "sync" : "async"}
+								class="h-full w-full object-cover pointer-events-none"
+							/>
+						</div>
+					);
+				})
+			)}
+		</div>
+	</div>
+
+	<!-- Synchronous inline initialization anchored to Set 5 -->
+	<script is:inline>
+		(function() {
+			const track = document.getElementById('hero-carousel');
+			if (track && track.scrollWidth > 0) {
+				track.scrollLeft = (track.scrollWidth / 11) * 5;
+			}
+		})();
+	</script>
+)}
+
+<script>
+	document.addEventListener('astro:page-load', () => {
+		const track = document.getElementById('hero-carousel');
+		if (!track) return;
+
+		let exactScrollLeft = 0;
+
+		const initScroll = () => {
+			const setWidth = track.scrollWidth / 11;
+			if (setWidth > 0) {
+				track.scrollLeft = setWidth * 5;
+				exactScrollLeft = setWidth * 5;
+			}
+		};
+
+		initScroll();
+		requestAnimationFrame(initScroll);
+
+		let lastClientWidth = track.clientWidth;
+		window.addEventListener('resize', () => {
+			const currentClientWidth = track.clientWidth;
+			if (currentClientWidth === lastClientWidth) return;
+			lastClientWidth = currentClientWidth;
+			initScroll();
+		}, { passive: true });
+
+		const baseSpeed = 0.35;
+		let targetSpeed = baseSpeed;
+		let currentSpeed = baseSpeed;
+		const speedLerp = 0.025;
+
+		let inertiaVelocity = 0;
+		const friction = 0.98;
+
+		let isHovered = false;
+		let isDown = false;
+		let isTouchActive = false;
+		let isNativeScrolling = false;
+		let isProgrammaticScroll = false;
+		let startX = 0;
+		let scrollLeftStart = 0;
+		let lastX = 0;
+		let lastTime = Date.now();
+		let nativeScrollTimeout: number;
+
+		track.addEventListener('mousedown', (e) => {
+			isDown = true;
+			track.classList.add('cursor-grabbing');
+			startX = e.pageX - track.offsetLeft;
+			scrollLeftStart = track.scrollLeft;
+			exactScrollLeft = track.scrollLeft;
+			lastX = e.pageX;
+			lastTime = Date.now();
+			targetSpeed = 0;
+			inertiaVelocity = 0;
+		});
+
+		window.addEventListener('mouseup', () => {
+			if (!isDown) return;
+			isDown = false;
+			track.classList.remove('cursor-grabbing');
+			if (!isHovered && !isTouchActive && !isNativeScrolling) targetSpeed = baseSpeed;
+		});
+
+		track.addEventListener('mousemove', (e) => {
+			if (!isDown) return;
+			e.preventDefault();
+			const currentX = e.pageX;
+			const now = Date.now();
+			const dt = now - lastTime || 16;
+			
+			const dx = lastX - currentX;
+			inertiaVelocity = (dx / dt) * 15;
+
+			lastX = currentX;
+			lastTime = now;
+
+			const walk = (currentX - startX) * 1.5;
+			exactScrollLeft = scrollLeftStart - walk;
+			isProgrammaticScroll = true;
+			track.scrollLeft = exactScrollLeft;
+		});
+
+		track.addEventListener('mouseenter', () => {
+			isHovered = true;
+			if (!isDown) targetSpeed = 0;
+		}, { passive: true });
+
+		track.addEventListener('mouseleave', () => {
+			isHovered = false;
+			if (!isDown && !isTouchActive && !isNativeScrolling) targetSpeed = baseSpeed;
+		}, { passive: true });
+
+		track.addEventListener('touchstart', () => {
+			isTouchActive = true;
+			isNativeScrolling = true;
+			targetSpeed = 0;
+			inertiaVelocity = 0;
+			exactScrollLeft = track.scrollLeft;
+			clearTimeout(nativeScrollTimeout);
+		}, { passive: true });
+
+		track.addEventListener('touchend', () => {
+			isTouchActive = false;
+			exactScrollLeft = track.scrollLeft;
+		}, { passive: true });
+		
+		track.addEventListener('touchcancel', () => {
+			isTouchActive = false;
+			exactScrollLeft = track.scrollLeft;
+		}, { passive: true });
+
+		const handleNativeMomentum = () => {
+			isNativeScrolling = true;
+			targetSpeed = 0;
+			inertiaVelocity = 0;
+			exactScrollLeft = track.scrollLeft;
+			
+			clearTimeout(nativeScrollTimeout);
+			nativeScrollTimeout = window.setTimeout(() => {
+				isNativeScrolling = false;
+				exactScrollLeft = track.scrollLeft;
+				if (!isHovered && !isDown && !isTouchActive) {
+					targetSpeed = baseSpeed;
+				}
+			}, 400);
+		};
+
+		track.addEventListener('wheel', handleNativeMomentum, { passive: true });
+
+		track.addEventListener('scroll', () => {
+			if (isProgrammaticScroll) {
+				isProgrammaticScroll = false;
+				return;
+			}
+			handleNativeMomentum();
+		}, { passive: true });
+
+		let animationFrameId: number;
+		
+		const animate = () => {
+			if (document.hidden) {
+				animationFrameId = requestAnimationFrame(animate);
+				return;
+			}
+
+			isProgrammaticScroll = false;
+			const setWidth = track.scrollWidth / 11;
+
+			if (isTouchActive || isNativeScrolling) {
+				exactScrollLeft = track.scrollLeft;
+			}
+
+			currentSpeed += (targetSpeed - currentSpeed) * speedLerp;
+
+			if (Math.abs(inertiaVelocity) > 0.01) {
+				inertiaVelocity *= friction;
+			} else {
+				inertiaVelocity = 0;
+			}
+
+			if (!isDown && !isTouchActive && !isNativeScrolling && setWidth > 0) {
+				exactScrollLeft += currentSpeed + inertiaVelocity;
+				isProgrammaticScroll = true;
+				track.scrollLeft = exactScrollLeft;
+			}
+
+			if (!isTouchActive && !isDown && setWidth > 0) {
+				const currentScroll = track.scrollLeft;
+				if (currentScroll >= setWidth * 8 || currentScroll <= setWidth * 2) {
+					const jumps = Math.round((currentScroll - (setWidth * 5)) / setWidth);
+					const offset = jumps * setWidth;
+					
+					exactScrollLeft = currentScroll - offset;
+					isProgrammaticScroll = true;
+					track.scrollLeft = exactScrollLeft;
+					if (isDown) scrollLeftStart -= offset;
+				}
+			}
+
+			animationFrameId = requestAnimationFrame(animate);
+		};
+
+		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (!prefersReducedMotion) {
+			animationFrameId = requestAnimationFrame(animate);
+		}
+
+		document.addEventListener('astro:before-swap', () => {
+			cancelAnimationFrame(animationFrameId);
+			clearTimeout(nativeScrollTimeout);
+		}, { once: true });
+	});
+</script>
+
+<style>
+	.carousel-mask {
+		isolation: isolate;
+		-webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+		mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+		-webkit-mask-size: 100% 100%;
+		mask-size: 100% 100%;
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+	}
+
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	.no-scrollbar {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+</style>

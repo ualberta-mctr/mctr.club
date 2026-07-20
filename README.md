@@ -60,3 +60,4 @@ This website was built using code from the following projects
 - https://github.com/jomorespi/manduca
 - https://github.com/dodolalorc/astro-navfolio
 - https://github.com/cbetz/pulsar-lite
+- https://github.com/fauziralpiandi/astrogent
