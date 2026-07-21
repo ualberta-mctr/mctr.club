@@ -1,4 +1,6 @@
-# mctr.site
+# mctr.club
+
+Visit the live website at [mctr.club](https://mctr.club)
 
 ## Project Structure
 
@@ -7,32 +9,29 @@ Notable files and locations in the project
 ```text
 ├── public/
 ├── src/
+│   ├── assets/
 │   ├── components/
 │   ├── content/
-│   ├── data/
 │   ├── layouts/
 │   ├── pages/
-│   ├── styles/
-│   └── utils/
-├── settings.json
+│   ├── scripts/
+│   ├── settings/
+│   └── styles/
 ```
 
-### Folders
+* **`public/`** Contains static assets that do not need to be processed by Astro’s build system 
+* **`src/assets/`** Contains images used throughout the site  
+* **`src/components/`**: Reusable Astro UI elements
+* **`src/content/`**: Reserved for Astro’s **Content Collections**. This folder contains the `.md` files for events and updates on the website
+* **`src/layouts/`**: Reusable Astro Layouts
+* **`src/pages/`**: This folder contains all the pages on the website, URLs are built from file-based routing
+* **`src/scripts/`**: Miscellaneous javascript functions
+* **`src/settings/`**: JSON files for configuring the website
+* **`src/styles/`**: Contains `global.css` with a TailwindCSS import and variables used throughout the project
 
-* **`public/`**
-Contains static assets that do not need to be processed by Astro’s build system 
-* **`components/`**: Reusable Astro UI elements
-* **`content/`**: Reserved for Astro’s **Content Collections**. This folder contains the `.md` files for the updates on the website
-* **`data/`** & `utils/`: Miscellaneous functions
-* **`layouts/`**: Reusable Astro Layouts
-* **`pages/`**: This folder contains all the pages on the website, URLs are built from file-based routing
-* **`styles/`**: Contains `global.css` with a TailwindCSS import and variables used throughout the project
 
-
-### Notable Configuration Files
-
-* **`settings.json`**
-This configuration file is used to edit the links available at `mctr.club/links`
+## Contributing Guide
+Read the guide at `src/pages/resources/contribute/index.md`
 
 
 ## Commands
@@ -51,7 +50,9 @@ All commands are run from the root of the project, from a terminal:
 ## Tech Stack
 * **[Astro](https://astro.build/)** – A modern web framework optimized for speed. It utilizes an "island architecture" to deliver ultra-fast performance by shipping zero client-side JavaScript by default.
 * **[Tailwind CSS](https://tailwindcss.com/)** – A utility-first CSS framework that enables rapid UI development and responsive design directly within your HTML and Astro components.
-
+* **[Lucide](https://lucide.dev/)** – An open-source icon library that provides a clean, consistent, and lightweight collection of customizable icons for your UI components.
+* **[MDX](https://mdxjs.com/)** – An extension of Markdown that lets you write JSX directly within your content, enabling interactive components and dynamic elements inside markdown files.
+* **[Schedule-X](https://schedule-x.dev/)** – A modern, responsive JavaScript event calendar and scheduling library designed for smooth performance and flexible integration.
 
 ## Credits
 This website was built using code from the following projects

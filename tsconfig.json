@@ -24,6 +24,9 @@
       "@/styles/*": [
         "./src/styles/*"
       ],
+      "@/settings/*": [
+        "./src/settings/*"
+      ],
       "@/*": [
         "./src/*"
       ]

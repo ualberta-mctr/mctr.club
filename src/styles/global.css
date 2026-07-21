@@ -22,6 +22,10 @@
 }
 
 @layer base {
+    ::selection {
+        @apply bg-violet-400/80 text-slate-900;
+    }
+
     * {
         @apply underline-offset-4;
     }
