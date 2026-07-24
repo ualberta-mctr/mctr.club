@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import textureImg from './assets/LDR_LLL1_0.png';
+
 'use strict';
 
 let abortController = null;
@@ -436,8 +438,8 @@ function initFluidSimulation() {
   let bloomFramebuffers = [];
   let sunrays;
   let sunraysTemp;
-
-  let ditheringTexture = createTextureAsync('./assets/LDR_LLL1_0.png');
+  
+  let ditheringTexture = createTextureAsync(textureImg.src);
 
   let blurProgram = new Program(blurVertexShader, blurShader);
   let copyProgram = new Program(baseVertexShader, copyShader);

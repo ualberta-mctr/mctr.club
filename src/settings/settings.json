@@ -8,7 +8,7 @@
   },
   "Header": {
     "Name": "Mechatronics and Robotics Engineering Club",
-    "Bio": "Home for mechatronics students",
+    "Bio": "Home of Mechatronics @ UAlberta",
     "Avatar": "favicon/favicon.svg"
   },
   "Links": {
@@ -53,9 +53,9 @@
   "Footer": {
     "Text": "",
     "Menu": {
-      "Updates": "updates",
-      "Resources": "resources",
-      "About Us": "about"
+      "Updates": "/updates",
+      "Resources": "/resources",
+      "About Us": "/about"
     }
   }
 }

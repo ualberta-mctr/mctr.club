@@ -30,13 +30,13 @@ export const GET: APIRoute = async ({ request }) => {
 
     if (!response.ok) {
       console.error(`Google API Rejected Request (${response.status}):`, JSON.stringify(data, null, 2));
-      return new Response(JSON.stringify(data), { status: response.status });
+      return new Response(JSON.stringify(data), { 
+        status: response.status,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return sendCachedJson(data);
   } catch (error) {
     console.error("Fatal Fetch Error in API Route:", error);
     return new Response(JSON.stringify({ error: 'Failed to fetch from Google' }), { 
@@ -45,3 +45,13 @@ export const GET: APIRoute = async ({ request }) => {
     });
   }
 };
+
+function sendCachedJson(data: any, edgeCacheSeconds = 30, browserCacheSeconds = 15) {
+  return new Response(JSON.stringify(data), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': `public, max-age=${browserCacheSeconds}, s-maxage=${edgeCacheSeconds}`,
+    },
+  });
+}

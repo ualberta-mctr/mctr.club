@@ -167,3 +167,14 @@ tags: ['string', 'string']
 ---
 ```
 All markdown files in the Updates section must have the metadata listed above in the `.md` frontmatter for the website to compile successfully. In the body of the `.md` file (below the frontmatter) is where you can write the content of the update. 
+
+## DevOps Management
+
+### Cloudflare
+The website domain and hosting is controlled from a Cloudflare account that was created using the "Sign in with google" method and the `mctrclub@ualberta.ca` email address. Further members are added following this guide: https://developers.cloudflare.com/fundamentals/manage-members/manage/
+
+### GitHub Organization
+The public code repository for this website is stored the organization located at https://github.com/ualberta-mctr. The organization is controlled from a GitHub account that was created using the "Sign in with google" method  and the `mctrclub@ualberta.ca` email address. Further members are added following this guide: https://docs.github.com/en/organizations/managing-membership-in-your-organization/inviting-users-to-join-your-organization
+
+### Google Cloud Console
+For the calendar google calendar integration on the website, an API tied to `mctrclub@ualberta.ca` is used to access https://console.cloud.google.com/apis/api/calendar-json.googleapis.com
