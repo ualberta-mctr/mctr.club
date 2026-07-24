@@ -1408,4 +1408,13 @@ function initFluidSimulation() {
 
 }
 
-document.addEventListener('astro:page-load', initFluidSimulation);
+function scheduleInitFluidSimulation() {
+  if (typeof window === 'undefined') return;
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(() => initFluidSimulation(), { timeout: 800 });
+  } else {
+    setTimeout(initFluidSimulation, 100);
+  }
+}
+
+document.addEventListener('astro:page-load', scheduleInitFluidSimulation);

@@ -45,12 +45,12 @@ const { name, role, image, about, enableModal } = Astro.props;
       
       <div class="relative bg-[#0e0e16] border border-white/10 rounded-2xl p-6 shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col md:flex-row gap-6 md:gap-8 text-left overflow-hidden">
         
-        <button class="close-button absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full bg-black/60 border border-white/20 text-white hover:bg-black/80 hover:scale-110 text-xl font-sans transition-all z-20 backdrop-blur-md pb-1 shadow-lg">&times;</button>
+        <button class="close-button absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full bg-black/60 border border-white/20 text-white hover:bg-black/80 hover:scale-110 text-xl font-sans transition-all z-20 backdrop-blur-md pb-1 shadow-lg" aria-label="Close dialog">&times;</button>
         
         <div class="relative w-full md:w-[280px] shrink-0 aspect-[3/4] overflow-hidden rounded-xl border border-white/5 bg-neutral-900 mx-auto md:mx-0">
           {image ? (
             <Image 
-              src={image} alt={name} width={600} format="webp"
+              src={image} alt={name} width={600} format="webp" quality={80}
               class="absolute inset-0 w-full h-full object-cover object-center block"
             />
           ) : (

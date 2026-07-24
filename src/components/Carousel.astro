@@ -23,7 +23,7 @@ const imageSets = [images, images, images, images, images, images, images, image
 		>
 			{imageSets.map((set, setIndex) => 
 				set.map((image, index) => {
-					const isLcp = setIndex === 5 && index < 3;
+					const isLcp = setIndex === 5 && index === 0;
 					
 					return (
 						<div 
@@ -33,9 +33,10 @@ const imageSets = [images, images, images, images, images, images, images, image
 							<Image
 								src={image}
 								alt={`Mechatronics Club photo ${index + 1}`}
-								widths={[360, 540, 720, 960]}
-								sizes="(max-width: 640px) 360px, (max-width: 768px) 540px, (max-width: 1024px) 720px, 960px"
+								widths={[320, 480, 640, 800]}
+								sizes="(max-width: 640px) 320px, (max-width: 768px) 480px, (max-width: 1024px) 640px, 800px"
 								format="webp"
+								quality={75}
 								loading={isLcp ? "eager" : "lazy"}
 								fetchpriority={isLcp ? "high" : "auto"}
 								decoding={isLcp ? "sync" : "async"}

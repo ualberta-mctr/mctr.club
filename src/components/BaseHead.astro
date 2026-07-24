@@ -7,6 +7,7 @@ interface Props {
 const { title, description = "Home of UAlberta Mechatronics" } = Astro.props;
 
 import { ClientRouter } from "astro:transitions";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 <head>
     <meta charset="utf-8" />
@@ -38,6 +39,7 @@ import { ClientRouter } from "astro:transitions";
     <meta name="theme-color" content="#000000">
 
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="canonical" href={canonicalURL} />
     
     <ClientRouter />
 </head>
