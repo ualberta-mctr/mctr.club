@@ -177,7 +177,7 @@ today.setHours(0, 0, 0, 0);
 </PageLayout>
 
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
+	function initFilters() {
 		const filterBtns = document.querySelectorAll('.filter-btn');
 		const cards = document.querySelectorAll('.event-card');
 
@@ -207,7 +207,9 @@ today.setHours(0, 0, 0, 0);
 				});
 			});
 		});
-	});
+	}
+
+	document.addEventListener('astro:page-load', initFilters);
 </script>
 
 <style>
