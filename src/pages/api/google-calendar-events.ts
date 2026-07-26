@@ -3,21 +3,34 @@ import { env } from 'cloudflare:workers';
 
 export const prerender = false;
 
-const ALLOWED_DOMAINS = [
-  "http://localhost",
-  "http://127.0.0.1",
-  "https://mctr.club"
-];
+function isAuthorizedRequest(referer: string | null, origin: string | null): boolean {
+  const checkUrl = (urlStr: string | null) => {
+    if (!urlStr) return false;
+    try {
+      const { hostname, protocol } = new URL(urlStr);
+      
+      if (protocol !== "http:" && protocol !== "https:") return false;
+      if (hostname === "localhost" || hostname === "127.0.0.1") return true;
+      if (hostname === "mctr.club") return true;
+      if (
+        hostname.endsWith("-mctr-club.gabriel-baltazart.workers.dev") || 
+        hostname === "mctr-club.gabriel-baltazart.workers.dev"
+      ) {
+        return true;
+      }
+      return false;
+    } catch {
+      return false; 
+    }
+  };
+  return checkUrl(referer) || checkUrl(origin);
+}
 
 export const GET: APIRoute = async ({ request }) => {
   const referer = request.headers.get("referer");
   const origin = request.headers.get("origin");
 
-  const isAuthorized = ALLOWED_DOMAINS.some(domain => 
-    (referer && referer.startsWith(domain)) || (origin && origin.startsWith(domain))
-  );
-
-  if (!isAuthorized) {
+  if (!isAuthorizedRequest(referer, origin)) {
     return new Response(JSON.stringify({ secretData: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }), { 
       status: 403,
       headers: { 'Content-Type': 'application/json' }
