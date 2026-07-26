@@ -296,6 +296,12 @@ const {
   :global(.sx__event-modal::after) {
     display: none !important;
   }
+
+  /* Week & Day View Time Grid Events (Outer Gap) */
+  :global(.sx__time-grid-event) {
+    margin-right: 5px !important;
+    width: calc(100% - 5px) !important; /* Compensates for left/right margins to prevent grid overflow */
+  }
 </style>
 
 <style is:global>

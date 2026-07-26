@@ -3,12 +3,43 @@ import { env } from 'cloudflare:workers';
 
 export const prerender = false;
 
+function isAuthorizedRequest(referer: string | null, origin: string | null): boolean {
+  const checkUrl = (urlStr: string | null) => {
+    if (!urlStr) return false;
+    try {
+      const { hostname, protocol } = new URL(urlStr);
+      
+      if (protocol !== "http:" && protocol !== "https:") return false;
+      if (hostname === "localhost" || hostname === "127.0.0.1") return true;
+      if (hostname === "mctr.club") return true;
+      if (
+        hostname.endsWith("-mctr-club.gabriel-baltazart.workers.dev") || 
+        hostname === "mctr-club.gabriel-baltazart.workers.dev"
+      ) {
+        return true;
+      }
+      return false;
+    } catch {
+      return false; 
+    }
+  };
+  return checkUrl(referer) || checkUrl(origin);
+}
+
 export const GET: APIRoute = async ({ request }) => {
+  const referer = request.headers.get("referer");
+  const origin = request.headers.get("origin");
+
+  if (!isAuthorizedRequest(referer, origin)) {
+    return new Response(JSON.stringify({ secretData: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }), { 
+      status: 403,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
   const API_KEY = env.GOOGLE_API_KEY || import.meta.env.GOOGLE_API_KEY;
-  
   const requestUrl = new URL(request.url);
   const paramCalendarId = requestUrl.searchParams.get("calendarId");
-  
   const CALENDAR_ID = paramCalendarId || env.GOOGLE_CALENDAR_ID || import.meta.env.GOOGLE_CALENDAR_ID;
 
   if (!API_KEY || !CALENDAR_ID) {
@@ -16,7 +47,7 @@ export const GET: APIRoute = async ({ request }) => {
     console.error(`GOOGLE_API_KEY defined: ${!!API_KEY}`);
     console.error(`GOOGLE_CALENDAR_ID defined: ${!!CALENDAR_ID}`);
     
-    return new Response(JSON.stringify({ error: 'Missing API Key or Calendar ID' }), { 
+    return new Response(JSON.stringify({ error: 'Server configuration error.' }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -30,21 +61,43 @@ export const GET: APIRoute = async ({ request }) => {
 
     if (!response.ok) {
       console.error(`Google API Rejected Request (${response.status}):`, JSON.stringify(data, null, 2));
-      return new Response(JSON.stringify(data), { 
+      return new Response(JSON.stringify({ error: 'Failed to retrieve calendar data.' }), { 
         status: response.status,
         headers: { 'Content-Type': 'application/json' }
       });
     }
 
-    return sendCachedJson(data);
+    const sanitizedData = minimizeEventData(data);
+
+    return sendCachedJson(sanitizedData);
   } catch (error) {
     console.error("Fatal Fetch Error in API Route:", error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch from Google' }), { 
+    return new Response(JSON.stringify({ error: 'Internal server error.' }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 };
+
+function minimizeEventData(rawData: any) {
+  if (!rawData || !Array.isArray(rawData.items)) {
+    return { items: [] };
+  }
+
+  const safeItems = rawData.items
+    .filter((event: any) => event && event.status !== "cancelled")
+    .map((event: any) => ({
+      id: event.id,
+      summary: event.summary || "Busy",
+      start: event.start,
+      end: event.end,
+      location: event.location || "",
+      description: event.description || "",
+      status: event.status
+    }));
+
+  return { items: safeItems };
+}
 
 function sendCachedJson(data: any, edgeCacheSeconds = 30, browserCacheSeconds = 15) {
   return new Response(JSON.stringify(data), {

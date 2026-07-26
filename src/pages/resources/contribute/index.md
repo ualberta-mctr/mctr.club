@@ -14,6 +14,40 @@ The purpose of the article is to provide any interested contributors as well as 
 - An intro on how to work with markdown files can be found on this website's [markdown guide](/resources/markdown-guide)
 - When including images, do not use HEIC assets (typically created by iPhones) on this website. Convert to a more widely supported like `.png` or `.jpg` first.
 
+## Contributing workflow
+
+If interested in contributing to the site, please make a request to a website administrator at `mctrclub@ualberta.ca` to be added to the `ualberta-mctr` GitHub organization and the `Web Team` GitHub team. 
+
+The general workflow for working on the site is as follows:
+1. Pull Latest `main`
+2. Create Branch
+3. Push & PR
+4. Review Cloudflare Preview
+5. Merge
+
+### Branches
+For new branches please follow the examples below
+```
+content/add-event-page
+feature/create-new-
+fix/broken-event-filters
+```
+The prefixes have the following usage: 
+- `content/` - This is for adding new events, updates, in the `/src/content` directories, and for making changes to the values in the `/src/settings` json files
+- `feature/` - This is for adding new elements to the website. Generally any PR that changes a `.astro`, `.js`, or `.ts` file falls in this cateogry
+- `fix/` - This is for any bug fixes, typos, etc. 
+
+A new branch can be created with the following command
+```bash
+git switch -c new-branch-name
+```
+
+### Pull requests
+When work on a particular branch is complete, open a PR targeting `main`. 
+
+### Review and merge
+Get another member of the club to review the site, open the preview link to verify the site looks good. After confirming everything is as expected, merge the branch into main and delete the branch. 
+
 ## Pages
 Below is a section detailing how to update the content contained within each area of the website
 
@@ -174,7 +208,7 @@ All markdown files in the Updates section must have the metadata listed above in
 The website domain and hosting is controlled from a Cloudflare account that was created using the "Sign in with google" method and the `mctrclub@ualberta.ca` email address. Further members are added following this guide: https://developers.cloudflare.com/fundamentals/manage-members/manage/
 
 ### GitHub Organization
-The public code repository for this website is stored the organization located at https://github.com/ualberta-mctr. The organization is controlled from a GitHub account that was created using the "Sign in with google" method  and the `mctrclub@ualberta.ca` email address. Further members are added following this guide: https://docs.github.com/en/organizations/managing-membership-in-your-organization/inviting-users-to-join-your-organization
+The public code repository for this website is stored the organization located at https://github.com/ualberta-mctr. The organization is controlled from a GitHub account that was created using the "Sign in with google" method  and the `mctrclub@ualberta.ca` email address. Further members are added following this guide: https://docs.github.com/en/organizations/managing-membership-in-your-organization/inviting-users-to-join-your-organization. Organization members are added to the `Web Team` following this guide: https://docs.github.com/en/organizations/organizing-members-into-teams/adding-organization-members-to-a-team
 
 ### Google Cloud Console
 For the calendar google calendar integration on the website, an API tied to `mctrclub@ualberta.ca` is used to access https://console.cloud.google.com/apis/api/calendar-json.googleapis.com

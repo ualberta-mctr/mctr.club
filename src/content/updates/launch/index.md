@@ -1,7 +1,7 @@
 ---
 title: "Website Launch!"
 description: "The first update from mctr.site"
-publishDate: "2026-07-17"
+publishDate: "2026-07-24"
 # updateDate: "YYYY-MM-DD" # Optional
 author: "Gabriel Baltazart"
 tags: ['admin', 'housekeeping']
