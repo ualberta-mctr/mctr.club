@@ -24,6 +24,12 @@
     "link": "/resources/geer-week-movies"
   },
   {
+    "icon": "library",
+    "title": "Resource Vault",
+    "description": "A living resource for mechatronics students",
+    "link": "https://drive.google.com/drive/folders/1Tq37an7I85KEGpJv-vFqQzXTbidAsNIY?usp=sharing"
+  },
+  {
     "icon": "workflow",
     "title": "MCTR Visualizer",
     "description": "A visual guide to the mechatronics program",
